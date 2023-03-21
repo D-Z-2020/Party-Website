@@ -1,1 +1,2 @@
-"# project-group-fluffy-fireflies" 
+# COMPSCI 732 Project --- MSc in Partying
+## Group: Fluffy Fireflies
