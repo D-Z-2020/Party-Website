@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 // login and authentication logic(hook)
 export default function useAuth(code) {
     const [accessToken, setAccessToken] = useState();
     const [refreshToken, setRefreshToken] = useState();
     const [expiresIn, setExpiresIn] = useState();
+    const navigate = useNavigate();
 
     useEffect(() => {
         axios.post('http://localhost:3001/login', { code })
@@ -12,9 +14,9 @@ export default function useAuth(code) {
                 setAccessToken(res.data.accessToken)
                 setRefreshToken(res.data.refreshToken)
                 setExpiresIn(res.data.expiresIn)
-                window.history.pushState({}, null, "/")
+                window.history.pushState({}, null, "/start")
             }).catch((err) => {
-                window.location = '/'
+                window.location = '/start'
             })
     }, [code])
 

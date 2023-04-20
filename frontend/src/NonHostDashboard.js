@@ -1,9 +1,7 @@
-import React from 'react'
-import useAuth from './hooks/useAuth'
+import useClientCredential from './hooks/useClientCredential'
 import { useState, useEffect } from "react"
 import SpotifyWebApi from 'spotify-web-api-node'
 import TrackSearchResult from './TrackSearchResult'
-import Player from './Player'
 import { useNavigate } from 'react-router-dom';
 import { isExpired, decodeToken } from "react-jwt";
 import axios from 'axios';
@@ -12,16 +10,16 @@ const spotifyApi = new SpotifyWebApi({
     clientId: "5c9e849201d24dfb8f563a7a081e3be9",
 
 })
-export default function Dashboard({ code, socket }) {
+
+export default function NonHostDashboard({ roomInfo, socket }) {
     const navigate = useNavigate();
-    const accessToken = useAuth(code)
+    const accessToken = useClientCredential()
     const [search, setSearch] = useState("")
     const [searchResults, setSearchResults] = useState([])
-    const [playingTrack, setPlayingTrack] = useState()
 
-    const [customQueue, setCustomQueue] = useState([]);
+    const [customQueue, setCustomQueue] = useState(roomInfo.queue);
 
-    const [roomId, setRoomId] = useState()
+    const [roomId, setRoomId] = useState(roomInfo._id)
 
 
     async function updateQueue(updatedQueue) {
@@ -35,6 +33,7 @@ export default function Dashboard({ code, socket }) {
         setCustomQueue(updatedQueue);
         socket.emit("add_track", { updatedQueue: updatedQueue, room: roomId });
     }
+
     useEffect(() => {
         socket.on("receive_track", (data) => {
             setCustomQueue(data.updatedQueue);
@@ -46,30 +45,6 @@ export default function Dashboard({ code, socket }) {
         });
     }, [])
 
-    async function getRoomInfo() {
-        try {
-            const req = await axios.get("http://localhost:3001/room", {
-                headers: {
-                    'x-access-token': localStorage.getItem("token")
-                }
-            })
-
-            setRoomId(req.data["_id"])
-            setCustomQueue(req.data["queue"])
-            socket.emit("join_room", req.data["_id"]);
-            console.log("join room", req.data["_id"])
-            if ((req.status) === 200) {
-                alert("restore room as host")
-            }
-        }
-        catch (err) {
-            localStorage.removeItem("token")
-            navigate("/UserLogin")
-            alert("invalid login status, please login again")
-            return
-        }
-    }
-
     useEffect(() => {
         const token = localStorage.getItem("token")
         //console.log(token)
@@ -79,9 +54,6 @@ export default function Dashboard({ code, socket }) {
                 localStorage.removeItem("token")
                 alert("Invalid Token")
                 navigate("/UserLogin")
-            } else {
-                // test
-                getRoomInfo();
             }
         }
         else {
@@ -102,17 +74,8 @@ export default function Dashboard({ code, socket }) {
         updateQueue([...customQueue, track])
     }
 
-    function playTrack(track) {
-        setPlayingTrack(track)
-        let index = -1
-        for (let i = 0; i < customQueue.length; i++) {
-            if (track.uri === customQueue[i].uri) {
-                index = i
-            }
-        }
-
-        updateQueue(customQueue.slice(index))
-
+    function showInfo(track) {
+        console.log(track)
     }
 
     useEffect(() => {
@@ -145,15 +108,14 @@ export default function Dashboard({ code, socket }) {
     }, [search, accessToken])
 
 
-    const dismissRoom = async () => {
+    const leaveRoom = async () => {
         try {
-            const req = await axios.get("http://localhost:3001/dismissRoom", {
+            const req = await axios.get("http://localhost:3001/leaveRoom", {
                 headers: {
                     'x-access-token': localStorage.getItem("token")
                 }
             })
 
-            socket.emit("host_room_dismissed", roomId);
             setRoomId(undefined)
             setCustomQueue([])
             window.location = '/start'
@@ -169,7 +131,7 @@ export default function Dashboard({ code, socket }) {
     return (
         <div>
             <p>Room Id: {roomId}</p>
-            <input type="button" value="dismiss room" onClick={dismissRoom} />
+            <input type="button" value="leave room" onClick={leaveRoom} />
             <br />
             <input type="text" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
 
@@ -183,14 +145,9 @@ export default function Dashboard({ code, socket }) {
             <b>Queue</b>
             <div style={{ overflowY: "auto", height: "40vh" }}>
                 {customQueue.map(track =>
-                    (<TrackSearchResult track={track} key={track.uri} chooseTrack={playTrack} />))}
+                    (<TrackSearchResult track={track} key={track.uri} chooseTrack={showInfo} />))}
             </div>
-
-            <div><Player accessToken={accessToken} trackUri={playingTrack?.uri}
-                playingTrack={playingTrack}
-                setPlayingTrack={setPlayingTrack}
-                customQueue={customQueue}
-                updateQueue={setCustomQueue} /></div>
         </div>
     )
 }
+
