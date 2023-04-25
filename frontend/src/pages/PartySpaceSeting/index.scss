@@ -1,0 +1,96 @@
+.party-space-seting {
+    >header {
+        height: 60px;
+        padding: 0 30px;
+
+        >img {
+            width: 107px;
+            height: 40px
+        }
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        button.ant-btn-link{
+            color: #0a7777;
+        }
+
+        .ant-dropdown-menu{
+            background-color: #0a7777;
+            
+            >li:first-child{
+                border-bottom: 1px solid #FFFFFF;
+                
+            }
+            >li{
+                color: #FFFFFF !important;
+                border-radius: none !important;
+            }
+        }
+    }
+
+    .main {
+        height: calc(100% - 60px);
+        background-color: #1e1e1e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        >section {
+            width: 90%;
+            height: 80%;
+            max-width: 610px;
+            input{
+                background-color: transparent;
+                caret-color: #FFFFFF;
+                color: #FFFFFF;
+            }
+            h1 {
+                color: #FFFFFF;
+                font-size: 66px;
+            }
+
+            .ant-form-item-label label {
+                color: #92C3C3
+            }
+
+            .ant-switch {
+                background-color: #add2d2;
+            }
+
+            .ant-switch.ant-switch-checked {
+                background-color: #0a7777;
+            }
+
+            .form-btns {
+                display: flex;
+                justify-content: space-between;
+                .back-btn {
+                    border: 1px solid #0a7777;
+                    color: #0a7777;
+                }
+
+                >button{
+                    width: 45%;
+                }
+            }
+
+            .item-no-wrap>.ant-form-item-row {
+                flex-flow: nowrap;
+                justify-content: space-between;
+
+                >div {
+                    flex: none;
+                }
+            }
+
+            @media (max-width: 390px) {
+                h1 {
+                    font-size: 35px;
+                }
+            }
+        }
+    }
+
+}

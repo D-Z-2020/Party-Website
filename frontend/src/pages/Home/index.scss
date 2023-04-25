@@ -1,0 +1,125 @@
+.login {
+    .header {
+        padding: 10px 40px;
+
+        img {
+            width: 220px;
+        }
+
+        .btn {
+            width: 86px !important;
+            height: 48px !important;
+            font-weight: 400;
+            font-size: 16px;
+
+            letter-spacing: 0.5px;
+
+            color: #FFFFFF;
+            padding: 0;
+        }
+    }
+
+    .content {
+        height: calc(100vh - 101px);
+        background: url(../../assets/loginBg.png) no-repeat;
+        background-size: cover;
+        position: relative;
+        min-height: 654px;
+
+        .position-absolute {
+            position: absolute;
+            left: 50%;
+            top: 15%;
+            transform: translate(-50%, 0%);
+
+            h1 {
+
+                font-weight: 700;
+                font-size: 72px;
+                line-height: 72px;
+                letter-spacing: 0.5px;
+                color: #fff;
+                margin-bottom: 120px;
+
+            }
+
+            .input {
+                width: 276px;
+                height: 88px;
+
+                background: rgba(229, 229, 229, 0.47);
+                /* Neutral/10 */
+
+                border: 1px solid #0A7777;
+                border-radius: 50px;
+                font-weight: 500;
+                font-size: 28px;
+                line-height: 32px;
+                /* identical to box height, or 114% */
+                color: #ADD2D2;
+                text-align: center;
+
+                &::placeholder {
+                    text-align: center;
+                    font-weight: 500;
+                    font-size: 28px;
+                    line-height: 32px;
+                    /* identical to box height, or 114% */
+
+
+                    color: #ADD2D2;
+                }
+
+                &:focus {
+                    border: 1px solid #0A7777;
+                    outline: none;
+                }
+            }
+            .text-danger{
+                height: 17px;
+                line-height: 17px;
+                font-weight: 400;
+                font-size: 16px;
+                letter-spacing: 0.5px;
+                color: #B00020;
+            }
+
+            .button {
+                width: 276px;
+                height: 88px;
+                background: #0A7777;
+                border: 1px solid #0A7777;
+                border-radius: 50px;
+                font-weight: 500;
+                font-size: 28px;
+                color: #FFFFFF;
+            }
+        }
+    }
+    @media(max-width: 1080px){
+        .header{
+            height: 60px;
+            padding: 10px 24px;
+            img{
+                width: 107px;
+            }
+            .btn {
+                width: 68px !important;
+                height: 29px !important;
+            }
+        }
+        .content{
+            height: calc(100vh - 60px);
+            .position-absolute{
+                width: 276px!important;
+                h1{
+                    font-size: 32px;
+                    line-height: 32px;
+                    margin-bottom: 61px;
+                }
+            }
+        }
+        
+
+    }
+}

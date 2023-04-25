@@ -1,0 +1,57 @@
+.party-space-seting {
+    >header {
+        height: 60px;
+        padding: 0 30px;
+
+        >img {
+            width: 107px;
+            height: 40px
+        }
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        button.ant-btn-link{
+            color: #0a7777;
+        }
+
+        .ant-dropdown-menu{
+            background-color: #0a7777;
+            
+            >li:first-child{
+                border-bottom: 1px solid #FFFFFF;
+                
+            }
+            >li{
+                color: #FFFFFF !important;
+                border-radius: none !important;
+            }
+        }
+    }
+    @media (min-width: 400px) {
+        .main {
+            height: calc(100% - 160px);
+            width: 100%;
+            // background: url('../../assets/loginBg.png');
+            padding: 0px 50px;
+            // display: flex;
+            // justify-content: center;
+            // align-items: center;
+            color: #FFFFFF;
+            
+        }
+    }
+    @media (max-width: 400px) {
+        .main {
+            height: calc(100% - 224px);
+            width: 100%;
+            // background: url('../../assets/loginBg.png');
+            // display: flex;
+            // justify-content: center;
+            // align-items: center;
+            color: #FFFFFF;
+            
+        }
+    }
+}
