@@ -131,7 +131,7 @@ export default function Start() {
     //console.log(code)
     return (
         <div>
-            {isNonHost ? <NonHostDashboard roomInfo={roomInfo} socket={socket} /> : (code ? <Dashboard code={code} socket={socket}/> : <div>
+            {isNonHost ? <NonHostDashboard roomInfo={roomInfo} socket={socket} globalIsPremium={globalIsPremium} setIsNonHost={setIsNonHost}/> : (code ? <Dashboard code={code} socket={socket}/> : <div>
                 <Login globalIsPremium={globalIsPremium}/>
                 <form onSubmit={(e) => joinRoom(e)}>
                     <input

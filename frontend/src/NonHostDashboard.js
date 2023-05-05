@@ -11,7 +11,7 @@ const spotifyApi = new SpotifyWebApi({
 
 })
 
-export default function NonHostDashboard({ roomInfo, socket }) {
+export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, setIsNonHost}) {
     const navigate = useNavigate();
     const accessToken = useClientCredential()
     const [search, setSearch] = useState("")
@@ -118,7 +118,9 @@ export default function NonHostDashboard({ roomInfo, socket }) {
 
             setRoomId(undefined)
             setCustomQueue([])
-            window.location = '/start'
+            setIsNonHost(false)
+            navigate('/start', {state:{isPremium:globalIsPremium}})
+
         }
         catch (err) {
             localStorage.removeItem("token")
