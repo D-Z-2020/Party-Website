@@ -5,6 +5,7 @@ import TrackSearchResult from './TrackSearchResult'
 import { useNavigate } from 'react-router-dom';
 import { isExpired, decodeToken } from "react-jwt";
 import axios from 'axios';
+import LinkArea from './LinkArea';
 
 const spotifyApi = new SpotifyWebApi({
     clientId: "5c9e849201d24dfb8f563a7a081e3be9",
@@ -21,6 +22,46 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
 
     const [roomId, setRoomId] = useState(roomInfo._id)
 
+    const [gameLink, setGameLink] = useState("")
+    const [gameLinks, setGameLinks] = useState(roomInfo.links)
+
+    function addLink(link) {
+        for (let i = 0; i < gameLinks.length; i++) {
+            if (link === gameLinks[i]) {
+                alert("You have already added this link!")
+                return;
+            }
+        }
+        updateLink([...gameLinks, link])
+    }
+
+    function deleteLink(link) {
+        let position = -1
+        for (let i = 0; i < gameLinks.length; i++) {
+            if (link === gameLinks[i]) {
+                position = i
+            }
+        }
+        if (position === -1) {
+            alert("link does not exist")
+        } else {
+            let newGameLinks = [...gameLinks];
+            newGameLinks.splice(position, 1);
+            updateLink(newGameLinks)
+        }
+    }
+
+    async function updateLink(updatedLinks) {
+        await axios.post("http://localhost:3001/updateLinks", {
+            headers: {
+                'x-access-token': localStorage.getItem("token")
+            },
+            updatedLinks: updatedLinks,
+            roomId: roomId
+        })
+        setGameLinks(updatedLinks);
+        socket.emit("update_links", { updatedLinks: updatedLinks, room: roomId });
+    }
 
     async function updateQueue(updatedQueue) {
         await axios.post("http://localhost:3001/updateQueue", {
@@ -37,6 +78,10 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
     useEffect(() => {
         socket.on("receive_track", (data) => {
             setCustomQueue(data.updatedQueue);
+        });
+
+        socket.on("receive_links", (data) => {
+            setGameLinks(data.updatedLinks);
         });
 
         socket.on("leave_host_room", () => {
@@ -134,6 +179,8 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
         <div>
             <p>Room Id: {roomId}</p>
             <input type="button" value="leave room" onClick={leaveRoom} />
+            <br />
+            <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink}/>
             <br />
             <input type="text" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
 

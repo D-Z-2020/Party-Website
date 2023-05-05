@@ -154,6 +154,32 @@ app.post('/updateQueue', async (req, res) => {
     }
 })
 
+app.post('/updateLinks', async (req, res) => {
+    const token = req.body.headers['x-access-token']
+    try {
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET)
+        const name = decoded.name
+
+        try {
+            // console.log(req.body.updatedQueue)
+            // console.log(req.body.roomId)
+            const room = await Room.findOne({
+                _id: req.body.roomId,
+            })
+            room.links = req.body.updatedLinks
+            room.save()
+            res.sendStatus(200)
+        } catch (err) {
+            res.sendStatus(400)
+            console.log(err)
+        }
+
+    } catch (err) {
+        console.log(err)
+        res.sendStatus(403)
+    }
+})
+
 app.post('/joinRoom', async (req, res) => {
     const token = req.body.headers['x-access-token']
     try {
@@ -364,6 +390,10 @@ io.on("connection", (socket) => {
 
     socket.on("add_track", (data) => {
         socket.to(data.room).emit("receive_track", data);
+    });
+
+    socket.on("update_links", (data) => {
+        socket.to(data.room).emit("receive_links", data);
     });
 
     socket.on("host_room_dismissed", (data) => {

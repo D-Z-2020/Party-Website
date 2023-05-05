@@ -7,12 +7,13 @@ import Player from './Player'
 import { useNavigate } from 'react-router-dom';
 import { isExpired, decodeToken } from "react-jwt";
 import axios from 'axios';
+import LinkArea from './LinkArea'
 
 const spotifyApi = new SpotifyWebApi({
     clientId: "5c9e849201d24dfb8f563a7a081e3be9",
 
 })
-export default function Dashboard({ code, socket}) {
+export default function Dashboard({ code, socket }) {
     const navigate = useNavigate();
     const [isPremium, accessToken] = useAuth(code)
     // console.log(isPremium)
@@ -24,7 +25,46 @@ export default function Dashboard({ code, socket}) {
     const [customQueue, setCustomQueue] = useState([]);
 
     const [roomId, setRoomId] = useState()
-    
+    const [gameLink, setGameLink] = useState("")
+    const [gameLinks, setGameLinks] = useState([])
+
+    function addLink(link) {
+        for (let i = 0; i < gameLinks.length; i++) {
+            if (link === gameLinks[i]) {
+                alert("You have already added this link!")
+                return;
+            }
+        }
+        updateLink([...gameLinks, link])
+    }
+
+    function deleteLink(link) {
+        let position = -1
+        for (let i = 0; i < gameLinks.length; i++) {
+            if (link === gameLinks[i]) {
+                position = i
+            }
+        }
+        if (position === -1) {
+            alert("link does not exist")
+        } else {
+            let newGameLinks = [...gameLinks];
+            newGameLinks.splice(position, 1);
+            updateLink(newGameLinks)
+        }
+    }
+
+    async function updateLink(updatedLinks) {
+        await axios.post("http://localhost:3001/updateLinks", {
+            headers: {
+                'x-access-token': localStorage.getItem("token")
+            },
+            updatedLinks: updatedLinks,
+            roomId: roomId
+        })
+        setGameLinks(updatedLinks);
+        socket.emit("update_links", { updatedLinks: updatedLinks, room: roomId });
+    }
 
     async function updateQueue(updatedQueue) {
         await axios.post("http://localhost:3001/updateQueue", {
@@ -40,6 +80,10 @@ export default function Dashboard({ code, socket}) {
     useEffect(() => {
         socket.on("receive_track", (data) => {
             setCustomQueue(data.updatedQueue);
+        });
+
+        socket.on("receive_links", (data) => {
+            setGameLinks(data.updatedLinks);
         });
 
         socket.on("leave_host_room", () => {
@@ -58,6 +102,7 @@ export default function Dashboard({ code, socket}) {
 
             setRoomId(req.data["_id"])
             setCustomQueue(req.data["queue"])
+            setGameLinks(req.data["links"])
             socket.emit("join_room", req.data["_id"]);
             console.log("join room", req.data["_id"])
             if ((req.status) === 200) {
@@ -92,13 +137,13 @@ export default function Dashboard({ code, socket}) {
         }
     }, [])
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(isPremium)
         if (!isPremium) {
             dismissRoom(isPremium);
             alert("you need premium account to be a host!");
         }
-    },[isPremium])
+    }, [isPremium])
 
 
 
@@ -155,7 +200,7 @@ export default function Dashboard({ code, socket}) {
     }, [search, accessToken])
 
 
-    const dismissRoom = async (isPremium=true) => {
+    const dismissRoom = async (isPremium = true) => {
         try {
             const req = await axios.get("http://localhost:3001/dismissRoom", {
                 headers: {
@@ -167,7 +212,7 @@ export default function Dashboard({ code, socket}) {
             setRoomId(undefined)
             setCustomQueue([])
             // window.location = '/start'
-            navigate('/start', {state:{isPremium}})
+            navigate('/start', { state: { isPremium } })
         }
         catch (err) {
             localStorage.removeItem("token")
@@ -181,6 +226,8 @@ export default function Dashboard({ code, socket}) {
         <div>
             <p>Room Id: {roomId}</p>
             <input type="button" value="dismiss room" onClick={dismissRoom} />
+            <br />
+            <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink}/>
             <br />
             <input type="text" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
 
