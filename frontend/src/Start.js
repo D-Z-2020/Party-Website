@@ -3,7 +3,7 @@ import Login from './Login';
 import Dashboard from "./Dashboard"
 import NonHostDashboard from './NonHostDashboard';
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
 import { isExpired, decodeToken } from "react-jwt";
 import axios from 'axios';
 import io from 'socket.io-client';
@@ -11,9 +11,21 @@ import io from 'socket.io-client';
 const socket = io('http://localhost:3001');
 export default function Start() {
     const navigate = useNavigate();
+    const location = useLocation();
     const [roomIdToJoin, setRoomIdToJoin] = useState("")
     const [roomInfo, setRoomInfo] = useState()
     const [isNonHost, setIsNonHost] = useState(false)
+    const [globalIsPremium, setGlobalIsPremium] = useState(true)
+    useEffect(()=> {
+        if (location.state?.isPremium !== false) {
+            setGlobalIsPremium(true)
+        } else {
+            setGlobalIsPremium(false)
+        }
+    },[location.state?.isPremium])
+
+    
+    // console.log(globalIsPremium)
     // test
     async function pop() {
         try {
@@ -119,8 +131,8 @@ export default function Start() {
     //console.log(code)
     return (
         <div>
-            {isNonHost ? <NonHostDashboard roomInfo={roomInfo} socket={socket} /> : (code ? <Dashboard code={code} socket={socket} /> : <div>
-                <Login />
+            {isNonHost ? <NonHostDashboard roomInfo={roomInfo} socket={socket} /> : (code ? <Dashboard code={code} socket={socket}/> : <div>
+                <Login globalIsPremium={globalIsPremium}/>
                 <form onSubmit={(e) => joinRoom(e)}>
                     <input
                         className='roomIdField'

@@ -12,9 +12,11 @@ const spotifyApi = new SpotifyWebApi({
     clientId: "5c9e849201d24dfb8f563a7a081e3be9",
 
 })
-export default function Dashboard({ code, socket }) {
+export default function Dashboard({ code, socket}) {
     const navigate = useNavigate();
-    const accessToken = useAuth(code)
+    const [isPremium, accessToken] = useAuth(code)
+    // console.log(isPremium)
+    // console.log(accessToken)
     const [search, setSearch] = useState("")
     const [searchResults, setSearchResults] = useState([])
     const [playingTrack, setPlayingTrack] = useState()
@@ -22,7 +24,7 @@ export default function Dashboard({ code, socket }) {
     const [customQueue, setCustomQueue] = useState([]);
 
     const [roomId, setRoomId] = useState()
-
+    
 
     async function updateQueue(updatedQueue) {
         await axios.post("http://localhost:3001/updateQueue", {
@@ -90,6 +92,14 @@ export default function Dashboard({ code, socket }) {
         }
     }, [])
 
+    useEffect(()=>{
+        console.log(isPremium)
+        if (!isPremium) {
+            dismissRoom(isPremium);
+            alert("you need premium account to be a host!");
+        }
+    },[isPremium])
+
 
 
     function addTrack(track) {
@@ -145,7 +155,7 @@ export default function Dashboard({ code, socket }) {
     }, [search, accessToken])
 
 
-    const dismissRoom = async () => {
+    const dismissRoom = async (isPremium=true) => {
         try {
             const req = await axios.get("http://localhost:3001/dismissRoom", {
                 headers: {
@@ -156,7 +166,8 @@ export default function Dashboard({ code, socket }) {
             socket.emit("host_room_dismissed", roomId);
             setRoomId(undefined)
             setCustomQueue([])
-            window.location = '/start'
+            // window.location = '/start'
+            navigate('/start', {state:{isPremium}})
         }
         catch (err) {
             localStorage.removeItem("token")

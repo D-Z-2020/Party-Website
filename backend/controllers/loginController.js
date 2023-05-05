@@ -8,19 +8,41 @@ const login = async (req, res) => {
         clientSecret: process.env.CLIENT_SECRET,
     })
 
-    spotifyApi
+    let accessToken;
+    let refreshToken;
+    let expiresIn;
+    await spotifyApi
         .authorizationCodeGrant(code)
         .then(data => {
-            res.json({
-                accessToken: data.body.access_token,
-                refreshToken: data.body.refresh_token,
-                expiresIn: data.body.expires_in,
-            })
+            accessToken = data.body.access_token;
+            refreshToken = data.body.refresh_token;
+            expiresIn = data.body.expires_in;
+            // res.json({
+            //     accessToken: data.body.access_token,
+            //     refreshToken: data.body.refresh_token,
+            //     expiresIn: data.body.expires_in,
+            // })
         })
         .catch((err) => {
             console.log(err)
             res.sendStatus(400)
         })
+
+    let isPremium;
+    spotifyApi.setAccessToken(accessToken);
+    await spotifyApi.getMe()
+        .then((data) => {
+            console.log('Profile information:', data.body);
+            isPremium = data.body.product === 'premium'
+            console.log('Is user premium:', isPremium);
+        });
+
+    res.json({
+        accessToken,
+        refreshToken,
+        expiresIn,
+        isPremium
+    })
 }
 
 module.exports = { login };

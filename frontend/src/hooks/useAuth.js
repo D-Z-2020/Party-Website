@@ -6,15 +6,23 @@ export default function useAuth(code) {
     const [accessToken, setAccessToken] = useState();
     const [refreshToken, setRefreshToken] = useState();
     const [expiresIn, setExpiresIn] = useState();
+    const [isPremium, setIsPremium] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
         axios.post('http://localhost:3001/login', { code })
             .then(res => {
+                console.log(res)
                 setAccessToken(res.data.accessToken)
                 setRefreshToken(res.data.refreshToken)
                 setExpiresIn(res.data.expiresIn)
-                window.history.pushState({}, null, "/start")
+                setIsPremium(res.data.isPremium)
+                // if (!res.data.isPremium) {
+                //     window.location = '/start'
+                //     alert("you need premium account to be a host!")
+                // } else {
+                    window.history.pushState({}, null, "/start")
+                // }
             }).catch((err) => {
                 window.location = '/start'
             })
@@ -34,5 +42,5 @@ export default function useAuth(code) {
 
         return () => clearInterval(interval)
     }, [refreshToken, expiresIn])
-    return accessToken
+    return [isPremium, accessToken]
 }
