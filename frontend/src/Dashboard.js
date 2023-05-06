@@ -8,6 +8,8 @@ import { useNavigate } from 'react-router-dom';
 import { isExpired, decodeToken } from "react-jwt";
 import axios from 'axios';
 import LinkArea from './LinkArea'
+import ImageUpload from './ImageUpload'
+import RoomImages from './RoomImages'
 
 const spotifyApi = new SpotifyWebApi({
     clientId: "5c9e849201d24dfb8f563a7a081e3be9",
@@ -27,6 +29,8 @@ export default function Dashboard({ code, socket }) {
     const [roomId, setRoomId] = useState()
     const [gameLink, setGameLink] = useState("")
     const [gameLinks, setGameLinks] = useState([])
+    const [showPhotoAlbum, setShowPhotoAlbum] = useState(false)
+    const [fetchImagesKey, setFetchImagesKey] = useState(0);
 
     function addLink(link) {
         for (let i = 0; i < gameLinks.length; i++) {
@@ -89,6 +93,11 @@ export default function Dashboard({ code, socket }) {
         socket.on("leave_host_room", () => {
             window.location = "/start"
             alert("host dismiss the room")
+        });
+
+        socket.on("rerender_room_images", () => {
+            setFetchImagesKey(prevFetchImagesKey => prevFetchImagesKey + 1);
+            console.log("host rerender")
         });
     }, [])
 
@@ -207,11 +216,11 @@ export default function Dashboard({ code, socket }) {
                     'x-access-token': localStorage.getItem("token")
                 }
             })
-
             socket.emit("host_room_dismissed", roomId);
             setRoomId(undefined)
             setCustomQueue([])
             // window.location = '/start'
+            socket.emit("leave_room", roomId);
             navigate('/start', { state: { isPremium } })
         }
         catch (err) {
@@ -222,12 +231,29 @@ export default function Dashboard({ code, socket }) {
         }
     }
 
+    const handleImageUploaded = () => {
+        setFetchImagesKey(fetchImagesKey + 1);
+        socket.emit("image_upload", { room: roomId });
+    };
+
+    const handleImageDeleted = () => {
+        setFetchImagesKey(fetchImagesKey + 1);
+        socket.emit("image_upload", { room: roomId });
+    };
+
+
     return (
         <div>
             <p>Room Id: {roomId}</p>
             <input type="button" value="dismiss room" onClick={dismissRoom} />
             <br />
-            <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink}/>
+
+            <input type="button" value="view album" onClick={() => { setShowPhotoAlbum(!showPhotoAlbum) }} />
+            {showPhotoAlbum ? <div>
+                <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
+                <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} /></div> : <></>}
+            <br />
+            <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} />
             <br />
             <input type="text" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
 

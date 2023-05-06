@@ -9,11 +9,15 @@ const Room = require("./model/Room")
 const jwt = require("jsonwebtoken")
 const bcryptjs = require("bcryptjs")
 const SpotifyWebApi = require('spotify-web-api-node');
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
 
 mongoose.connect(process.env.DATABASE_URI)
 
 const app = express();
 app.use(cors());
+app.use('/uploads', express.static('uploads'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -329,6 +333,12 @@ app.get("/dismissRoom", async (req, res) => {
                 }
             })
 
+            const dir = `./uploads/${roomId}`;
+
+            if (fs.existsSync(dir)) {
+                fs.rmSync(dir, { recursive: true });
+            }
+
             res.sendStatus(200)
             return
         }
@@ -388,6 +398,10 @@ io.on("connection", (socket) => {
         socket.join(data);
     });
 
+    socket.on("leave_room", (roomId) => {
+        socket.leave(roomId);
+    });
+
     socket.on("add_track", (data) => {
         socket.to(data.room).emit("receive_track", data);
     });
@@ -399,4 +413,65 @@ io.on("connection", (socket) => {
     socket.on("host_room_dismissed", (data) => {
         socket.to(data).emit("leave_host_room");
     });
+
+    socket.on("image_upload", (data) => {
+        socket.to(data.room).emit("rerender_room_images");
+    });
 });
+
+
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        const roomID = req.params.roomID.split("=")[1];
+        const dir = `./uploads/${roomID}`;
+
+        if (!fs.existsSync(dir)) {
+            fs.mkdirSync(dir, { recursive: true });
+        }
+        cb(null, dir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + path.extname(file.originalname));
+    },
+});
+
+const upload = multer({ storage: storage });
+
+app.post('/upload/:roomID', upload.single('image'), (req, res) => {
+    res.status(200).json({ message: 'uploaded successfully', file: req.file });
+});
+
+app.get('/images/:roomID', (req, res) => {
+    const roomID = req.params.roomID.split("=")[1];
+    const dir = `./uploads/${roomID}`;
+
+    if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+
+    fs.readdir(dir, (err, files) => {
+        if (err) {
+            return res.status(500).json({ message: 'Error reading directory' });
+        }
+        res.status(200).json({ files: files.map(file => `/uploads/${roomID}/${file}`) });
+    });
+});
+
+app.delete('/images/:roomId/:filename', async (req, res) => {
+    const roomId = req.params.roomId.split("=")[1]
+    const filename = req.params.filename.split("=")[1]
+    const dir = `./uploads/${roomId}/${filename}`;
+    try {
+        if (fs.existsSync(dir)) {
+            fs.unlinkSync(dir);
+            res.status(200).send({ message: 'deleted successfully' });
+        } else {
+            res.status(404).send({ message: 'not found' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).send({ message: 'server error' });
+    }
+});
+
+
