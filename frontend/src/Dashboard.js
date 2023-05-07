@@ -256,19 +256,21 @@ export default function Dashboard({ code, socket }) {
 
     return (
         <div>
-            <RoomInfo roomId={roomId} partyName={partyName} setPartyName={setPartyName}
+            {activeComponent !== 'Setting' && <div><RoomInfo roomId={roomId} partyName={partyName} setPartyName={setPartyName}
                 location={location} setLocation={setLocation} date={date} setDate={setDate}
                 key={fetchRoomInfoKey} />
-            <input type="button" value="dismiss room" onClick={dismissRoom} />
-            <br />
+                {/* <input type="button" value="dismiss room" onClick={dismissRoom} /> */}
+                <br />
 
-            <input type="button" value="setting" onClick={() => showComponent('Setting')} />
-            <input type="button" value="view album" onClick={() => showComponent('Album')} />
-            <input type="button" value="show link" onClick={() => showComponent('Link')} />
-            <input type="button" value="show music" onClick={() => showComponent('Music')} />
+                <input type="button" value="setting" onClick={() => showComponent('Setting')} />
+                <input type="button" value="view album" onClick={() => showComponent('Album')} />
+                <input type="button" value="show link" onClick={() => showComponent('Link')} />
+                <input type="button" value="show music" onClick={() => showComponent('Music')} />
+            </div>}
 
             {activeComponent === 'Setting' && <Setting roomId={roomId} partyName={partyName} setPartyName={setPartyName}
-                location={location} setLocation={setLocation} date={date} setDate={setDate} socket={socket}
+                location={location} setLocation={setLocation} date={date} setDate={setDate} socket={socket} setActiveComponent={setActiveComponent}
+                dismissRoom={dismissRoom}
             />}
             <br />
 
@@ -300,7 +302,7 @@ export default function Dashboard({ code, socket }) {
                 </div>
             }
 
-            <div><Player accessToken={accessToken} trackUri={playingTrack?.uri}
+            <div style={{ position: 'fixed', bottom: "0%", width: "100%" }}><Player accessToken={accessToken} trackUri={playingTrack?.uri}
                 playingTrack={playingTrack}
                 setPlayingTrack={setPlayingTrack}
                 customQueue={customQueue}

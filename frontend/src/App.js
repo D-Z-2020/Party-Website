@@ -1,9 +1,4 @@
-import Login from './Login';
-import Dashboard from "./Dashboard"
-// import ChatRoom from "./ChatRoom"
-import UserRegister from './UserRegister';
-import UserLogin from './UserLogin';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import { Route, Routes} from 'react-router-dom';
 import Layout from './Layout';
 import Home from './Home';
 import Start from './Start';
@@ -27,18 +22,9 @@ function App() {
   }, [])
 
   return (
-    // <div>
-    //   {code ? <Dashboard code={code} /> : <Login />}
-    //   {/* <ChatRoom /> */}
-    //   <UserRegister />
-    //   <UserLogin />
-    // </div>
     <Routes>
       <Route path="/" element={<Layout userName={userName} setUserName={setUserName} />}>
-        <Route index element={<Home />} />
-        <Route path="UserRegister" element={<UserRegister />} />
-        <Route path="UserLogin" element={<UserLogin setUserName={setUserName} />} />
-        {/* <Route path="start" element={code ? <Dashboard code={code} /> : <Login />} /> */}
+        <Route index element={<Home setUserName={setUserName}/>} />
         <Route path="start" element={<Start />} />
       </Route>
     </Routes>

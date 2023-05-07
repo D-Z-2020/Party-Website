@@ -1,8 +1,10 @@
 import React from 'react'
 import { useState } from 'react'
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
-export default function UserRegister() {
+export default function UserRegister({setUserName}) {
+    const navigate = useNavigate()
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
 
@@ -13,7 +15,16 @@ export default function UserRegister() {
                 name: name,
                 password: password
             })
+
+            const response = await axios.post('http://localhost:3001/userLogin', {
+                name: name,
+                password: password
+            })
             alert("register success!")
+
+            setUserName(name)
+            localStorage.setItem("token", response.data.token)
+            navigate("/start")
         }
         catch (err) {
             alert(err.response.data)
@@ -30,14 +41,14 @@ export default function UserRegister() {
                     onChange={(e) => setName(e.target.value)}
                     type="text"
                     placeholder='name'
-                    required = {true} />
+                    required={true} />
 
                 <input
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     type="text"
                     placeholder='password'
-                    required = {true} />
+                    required={true} />
                 <input type="submit" value="Register" />
             </form>
         </div>

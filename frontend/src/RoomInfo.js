@@ -11,7 +11,7 @@ export default function RoomInfo({ roomId,partyName,setPartyName,location,setLoc
                         'x-access-token': localStorage.getItem("token")
                     }
                 })
-                console.log(res.data)
+
                 setPartyName(res.data.partyName)
                 setLocation(res.data.location)
                 setDate(res.data.date)

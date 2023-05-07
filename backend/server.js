@@ -236,11 +236,11 @@ app.post('/joinRoom', async (req, res) => {
                         } else {
                             // host join new room will dsimiss its original room, need to delet that room
                             // here also need to delete NonHost user from original room
-                            Room.findOneAndRemove({
+                            await Room.findOneAndRemove({
                                 _id: prevRoomId,
                             }).exec();
                             user.roomId = newRoomId
-                            user.save()
+                            await user.save()
 
                             const users = await User.find({})
                             users.map(user => {
@@ -310,10 +310,10 @@ app.get("/getRoomInfo", async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET)
         const name = decoded.name
-
         const user = await User.findOne({
             name: name,
         })
+
 
         const roomId = user.roomId
 

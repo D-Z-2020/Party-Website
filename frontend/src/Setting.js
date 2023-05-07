@@ -1,10 +1,12 @@
 import React from 'react'
 import { useState } from 'react'
 import axios from 'axios'
-export default function Setting({ roomId, partyName, setPartyName, location, setLocation, date, setDate, socket }) {
+import ConfirmationPage from './ConfirmationPage'
+export default function Setting({ roomId, partyName, setPartyName, location, setLocation, date, setDate, socket, setActiveComponent, dismissRoom }) {
     const [partyNameLocal, setPartyNameLocal] = useState(partyName)
     const [locationLocal, setLocationLocal] = useState(location)
     const [dateLocal, setDateLocal] = useState(date)
+    const [showConfirmationPage, setShowConfirmationPage] = useState(false)
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
@@ -21,15 +23,20 @@ export default function Setting({ roomId, partyName, setPartyName, location, set
             setPartyName(partyNameLocal)
             setLocation(locationLocal)
             setDate(dateLocal)
+            setActiveComponent("Music")
         } catch (err) {
             console.log(err)
         }
 
     };
 
+    const handleDismiss = () => {
+        setShowConfirmationPage(true)
+    }
+
     return (
         <div>
-            <form onSubmit={handleSubmit}>
+            {!showConfirmationPage && <form onSubmit={handleSubmit}>
                 <label htmlFor="party-name">Party Name:</label>
                 <input
                     type="text"
@@ -55,7 +62,13 @@ export default function Setting({ roomId, partyName, setPartyName, location, set
                 />
                 <br />
                 <button type="submit">Submit</button>
-            </form>
+            </form>}
+
+
+            {showConfirmationPage && <ConfirmationPage handleConfirm={dismissRoom} handleCancel={()=>setShowConfirmationPage(false)}/>}
+            
+            {!showConfirmationPage && <button type="button" onClick={()=> {setActiveComponent("Music")}}>Back To Party Space</button>}
+            {!showConfirmationPage && <div><input type="button" value="dismiss room" onClick={handleDismiss} /></div>}
         </div>
     );
 }

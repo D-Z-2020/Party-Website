@@ -9,6 +9,7 @@ import LinkArea from './LinkArea';
 import ImageUpload from './ImageUpload'
 import RoomImages from './RoomImages'
 import RoomInfo from './RoomInfo';
+import ConfirmationPage from './ConfirmationPage';
 
 const spotifyApi = new SpotifyWebApi({
     clientId: "5c9e849201d24dfb8f563a7a081e3be9",
@@ -225,15 +226,20 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
 
     return (
         <div>
-            <RoomInfo roomId={roomId} partyName={partyName} setPartyName={setPartyName} 
-            location = {location} setLocation={setLocation} date={date} setDate={setDate}
-            key={fetchRoomInfoKey} />
-            <input type="button" value="leave room" onClick={leaveRoom} />
-            <br />
+            {activeComponent !== 'Confirmation' &&
+                <div><RoomInfo roomId={roomId} partyName={partyName} setPartyName={setPartyName}
+                    location={location} setLocation={setLocation} date={date} setDate={setDate}
+                    key={fetchRoomInfoKey} />
 
-            <input type="button" value="view album" onClick={() => showComponent('Album')} />
-            <input type="button" value="show link" onClick={() => showComponent('Link')} />
-            <input type="button" value="show music" onClick={() => showComponent('Music')} />
+                    <input type="button" value="leave room" onClick={() => showComponent('Confirmation')} />
+                    <input type="button" value="view album" onClick={() => showComponent('Album')} />
+                    <input type="button" value="show link" onClick={() => showComponent('Link')} />
+                    <input type="button" value="show music" onClick={() => showComponent('Music')} />
+                </div>}
+
+            {activeComponent === 'Confirmation' &&
+                <ConfirmationPage handleConfirm={leaveRoom} handleCancel={() => showComponent('Music')} />}
+            <br />
 
             {activeComponent === 'Album' && <div>
                 <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
