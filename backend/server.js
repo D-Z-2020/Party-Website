@@ -280,6 +280,56 @@ app.post('/joinRoom', async (req, res) => {
     }
 })
 
+app.post("/changeSetting", async (req, res) => {
+    const token = req.body.headers['x-access-token']
+    try {
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET)
+        const name = decoded.name
+
+        const roomId = req.body["roomId"]
+
+
+        const room = await Room.findOne({
+            _id: roomId,
+        })
+        
+        room.partyName = req.body["partyName"]
+        room.location = req.body["location"]
+        room.date = req.body["date"]
+        room.save()
+        res.sendStatus(200)
+
+    } catch (err) {
+        console.log(err)
+        res.sendStatus(403)
+    }
+})
+
+app.get("/getRoomInfo", async (req, res) => {
+    const token = req.headers['x-access-token']
+    try {
+        const decoded = jwt.verify(token, process.env.TOKEN_SECRET)
+        const name = decoded.name
+
+        const user = await User.findOne({
+            name: name,
+        })
+
+        const roomId = user.roomId
+
+        const room = await Room.findOne({
+            _id: roomId,
+        })
+        
+        res.status(200)
+        res.json(room)
+
+    } catch (err) {
+        console.log(err)
+        res.sendStatus(403)
+    }
+})
+
 app.get("/userRoom", async (req, res) => {
     const token = req.headers['x-access-token']
     try {
@@ -412,6 +462,10 @@ io.on("connection", (socket) => {
 
     socket.on("host_room_dismissed", (data) => {
         socket.to(data).emit("leave_host_room");
+    });
+
+    socket.on("settingChanges", (data) => {
+        socket.to(data).emit("updateSetting");
     });
 
     socket.on("image_upload", (data) => {

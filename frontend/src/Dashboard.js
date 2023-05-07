@@ -10,6 +10,8 @@ import axios from 'axios';
 import LinkArea from './LinkArea'
 import ImageUpload from './ImageUpload'
 import RoomImages from './RoomImages'
+import RoomInfo from './RoomInfo'
+import Setting from './Setting'
 
 const spotifyApi = new SpotifyWebApi({
     clientId: "5c9e849201d24dfb8f563a7a081e3be9",
@@ -30,7 +32,14 @@ export default function Dashboard({ code, socket }) {
     const [gameLink, setGameLink] = useState("")
     const [gameLinks, setGameLinks] = useState([])
     const [showPhotoAlbum, setShowPhotoAlbum] = useState(false)
+    const [showLink, setShowLink] = useState(false)
+    const [showMusic, setShowMusic] = useState(false)
     const [fetchImagesKey, setFetchImagesKey] = useState(0);
+    const [fetchRoomInfoKey, setFetchRoomInfoKey] = useState(0);
+    const [partyName, setPartyName] = useState("")
+    const [location, setLocation] = useState("")
+    const [date, setDate] = useState("")
+    const [showSetting, setShowSetting] = useState(false)
 
     function addLink(link) {
         for (let i = 0; i < gameLinks.length; i++) {
@@ -244,8 +253,16 @@ export default function Dashboard({ code, socket }) {
 
     return (
         <div>
-            <p>Room Id: {roomId}</p>
+            <RoomInfo roomId={roomId} partyName={partyName} setPartyName={setPartyName}
+                location={location} setLocation={setLocation} date={date} setDate={setDate}
+                key={fetchRoomInfoKey} />
             <input type="button" value="dismiss room" onClick={dismissRoom} />
+            <br />
+
+            <input type="button" value="setting" onClick={() => { setShowSetting(!showSetting) }} />
+            {showSetting ? <Setting roomId={roomId} partyName={partyName} setPartyName={setPartyName}
+                location={location} setLocation={setLocation} date={date} setDate={setDate} socket={socket}
+                /> : <></>}
             <br />
 
             <input type="button" value="view album" onClick={() => { setShowPhotoAlbum(!showPhotoAlbum) }} />
@@ -253,22 +270,34 @@ export default function Dashboard({ code, socket }) {
                 <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
                 <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} /></div> : <></>}
             <br />
-            <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} />
-            <br />
-            <input type="text" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
 
-            </input>
-            <b style={{ display: 'block' }}>Search Result</b>
-            <div style={{ overflowY: "auto", height: "30vh" }}>
-                {searchResults.map(track =>
-                    (<TrackSearchResult track={track} key={track.uri} chooseTrack={addTrack} />))}
-            </div>
-            <p>--------------------------</p>
-            <b>Queue</b>
-            <div style={{ overflowY: "auto", height: "40vh" }}>
-                {customQueue.map(track =>
-                    (<TrackSearchResult track={track} key={track.uri} chooseTrack={playTrack} />))}
-            </div>
+            <input type="button" value="show link" onClick={() => { setShowLink(!showLink) }} />
+            {showLink ?
+                <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} />
+                : <></>}
+            <br />
+
+
+            <input type="button" value="show music" onClick={() => { setShowMusic(!showMusic) }} />
+            {showMusic ?
+                <div>
+                    <input type="text" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
+                    </input>
+                    <b style={{ display: 'block' }}>Search Result</b>
+                    <div style={{ overflowY: "auto", height: "30vh" }}>
+                        {searchResults.map(track =>
+                            (<TrackSearchResult track={track} key={track.uri} chooseTrack={addTrack} />))}
+                    </div>
+                    <p>--------------------------</p>
+                    <b>Queue</b>
+                    <div style={{ overflowY: "auto", height: "40vh" }}>
+                        {customQueue.map(track =>
+                            (<TrackSearchResult track={track} key={track.uri} chooseTrack={playTrack} />))}
+                    </div>
+                </div>
+                :
+                <></>
+            }
 
             <div><Player accessToken={accessToken} trackUri={playingTrack?.uri}
                 playingTrack={playingTrack}
