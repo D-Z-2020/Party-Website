@@ -31,15 +31,18 @@ export default function Dashboard({ code, socket }) {
     const [roomId, setRoomId] = useState()
     const [gameLink, setGameLink] = useState("")
     const [gameLinks, setGameLinks] = useState([])
-    const [showPhotoAlbum, setShowPhotoAlbum] = useState(false)
-    const [showLink, setShowLink] = useState(false)
-    const [showMusic, setShowMusic] = useState(false)
     const [fetchImagesKey, setFetchImagesKey] = useState(0);
     const [fetchRoomInfoKey, setFetchRoomInfoKey] = useState(0);
     const [partyName, setPartyName] = useState("")
     const [location, setLocation] = useState("")
     const [date, setDate] = useState("")
-    const [showSetting, setShowSetting] = useState(false)
+
+    const [activeComponent, setActiveComponent] = useState('Music');
+
+
+    const showComponent = (componentName) => {
+        setActiveComponent(componentName);
+    };
 
     function addLink(link) {
         for (let i = 0; i < gameLinks.length; i++) {
@@ -259,27 +262,27 @@ export default function Dashboard({ code, socket }) {
             <input type="button" value="dismiss room" onClick={dismissRoom} />
             <br />
 
-            <input type="button" value="setting" onClick={() => { setShowSetting(!showSetting) }} />
-            {showSetting ? <Setting roomId={roomId} partyName={partyName} setPartyName={setPartyName}
+            <input type="button" value="setting" onClick={() => showComponent('Setting')} />
+            <input type="button" value="view album" onClick={() => showComponent('Album')} />
+            <input type="button" value="show link" onClick={() => showComponent('Link')} />
+            <input type="button" value="show music" onClick={() => showComponent('Music')} />
+
+            {activeComponent === 'Setting' && <Setting roomId={roomId} partyName={partyName} setPartyName={setPartyName}
                 location={location} setLocation={setLocation} date={date} setDate={setDate} socket={socket}
-                /> : <></>}
+            />}
             <br />
 
-            <input type="button" value="view album" onClick={() => { setShowPhotoAlbum(!showPhotoAlbum) }} />
-            {showPhotoAlbum ? <div>
+            {activeComponent === 'Album' && <div>
                 <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
-                <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} /></div> : <></>}
+                <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} /></div>}
             <br />
 
-            <input type="button" value="show link" onClick={() => { setShowLink(!showLink) }} />
-            {showLink ?
+            {activeComponent === 'Link' &&
                 <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} />
-                : <></>}
+            }
             <br />
 
-
-            <input type="button" value="show music" onClick={() => { setShowMusic(!showMusic) }} />
-            {showMusic ?
+            {activeComponent === 'Music' &&
                 <div>
                     <input type="text" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
                     </input>
@@ -295,8 +298,6 @@ export default function Dashboard({ code, socket }) {
                             (<TrackSearchResult track={track} key={track.uri} chooseTrack={playTrack} />))}
                     </div>
                 </div>
-                :
-                <></>
             }
 
             <div><Player accessToken={accessToken} trackUri={playingTrack?.uri}
