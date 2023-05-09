@@ -104,10 +104,11 @@ app.get('/room', async (req, res) => {
     try {
         const decoded = jwt.verify(token, process.env.TOKEN_SECRET)
         const name = decoded.name
-
+        const code = await Room.generateUniqueCode();
         try {
             const room = await Room.create({
                 hostUser: name,
+                code: code
             })
 
             res.status(201)
@@ -196,7 +197,7 @@ app.post('/joinRoom', async (req, res) => {
             })
 
             const prevRoomId = user.roomId
-            const newRoomId = req.body["roomId"]
+            const newRoomCode = req.body["code"]
 
             // console.log(prevRoomId)
             // console.log(newRoomId)
@@ -207,9 +208,10 @@ app.post('/joinRoom', async (req, res) => {
             })
 
             let newRoom;
+            console.log(newRoomCode)
             try {
                 newRoom = await Room.findOne({
-                    _id: newRoomId,
+                    code: newRoomCode,
                 })
             }
 
@@ -224,7 +226,7 @@ app.post('/joinRoom', async (req, res) => {
                 res.send("invalid room id")
                 return
             } else {
-
+                const newRoomId = newRoom._id
                 // the user has previousely join some room
                 if (prevRoom) {
                     // the user is the host of prev room
@@ -339,8 +341,19 @@ app.get("/userRoom", async (req, res) => {
         const user = await User.findOne({
             name: name,
         })
+
+        const room = await Room.findOne({
+            _id: user.roomId,
+        })
+
+
         res.status(200)
-        res.json(user.roomId)
+        if (room) {
+            res.json(room.code)
+        }
+        else {
+            res.json(null)
+        }
 
     } catch (err) {
         console.log(err)

@@ -14,7 +14,27 @@ const roomSchema = new mongoose.Schema({
     links: { type: Array, default: [] },
     partyName: { type: String, default: "Party Space" },
     location: { type: String, default: "not specified" },
-    date: { type: String, default: getCurrentDT }
+    date: { type: String, default: getCurrentDT },
+    code: { type: String, unique: true, required: true }
 })
+
+roomSchema.statics.generateUniqueCode = async function () {
+    let code = 1000;
+    let existingRoom = null;
+
+    do {
+        existingRoom = await this.findOne({ code:String(code) });
+        if (!existingRoom) {
+            break;
+        }
+        code++;
+    } while (code <= 9999);
+
+    if (code > 9999) {
+        throw new Error('No unique code avaliable!');
+    }
+
+    return String(code);
+};
 
 module.exports = mongoose.model('Room', roomSchema);

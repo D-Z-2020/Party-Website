@@ -86,7 +86,7 @@ export default function Start() {
                 headers: {
                     'x-access-token': localStorage.getItem("token")
                 },
-                roomId: optionalRoomId ? optionalRoomId : roomIdToJoin
+                code: optionalRoomId ? optionalRoomId : roomIdToJoin
             })
 
             console.log("join_room", req.data["_id"])

@@ -25,6 +25,7 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
     const [customQueue, setCustomQueue] = useState(roomInfo.queue);
 
     const [roomId, setRoomId] = useState(roomInfo._id)
+    const [roomCode, setRoomCode] = useState(roomInfo.code)
 
     const [gameLink, setGameLink] = useState("")
     const [gameLinks, setGameLinks] = useState(roomInfo.links)
@@ -135,11 +136,11 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
             if (!user) {
                 localStorage.removeItem("token")
                 alert("Invalid Token")
-                navigate("/UserLogin")
+                navigate("/")
             }
         }
         else {
-            navigate("/UserLogin")
+            navigate("/")
             alert("To start, you must login first")
         }
     }, [])
@@ -200,6 +201,7 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
 
             socket.emit("leave_room", roomId);
             setRoomId(undefined)
+            setRoomId(undefined)
             setCustomQueue([])
             setIsNonHost(false)
             navigate('/start', { state: { isPremium: globalIsPremium } })
@@ -208,7 +210,7 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
         catch (err) {
             console.log(err)
             localStorage.removeItem("token")
-            navigate("/UserLogin")
+            navigate("/")
             alert("invalid login status, please login again")
             return
         }
@@ -227,7 +229,7 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
     return (
         <div>
             {activeComponent !== 'Confirmation' &&
-                <div><RoomInfo roomId={roomId} partyName={partyName} setPartyName={setPartyName}
+                <div><RoomInfo roomId={roomCode} partyName={partyName} setPartyName={setPartyName}
                     location={location} setLocation={setLocation} date={date} setDate={setDate}
                     key={fetchRoomInfoKey} />
 

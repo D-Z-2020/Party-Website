@@ -29,6 +29,7 @@ export default function Dashboard({ code, socket }) {
     const [customQueue, setCustomQueue] = useState([]);
 
     const [roomId, setRoomId] = useState()
+    const [roomCode, setRoomCode] = useState()
     const [gameLink, setGameLink] = useState("")
     const [gameLinks, setGameLinks] = useState([])
     const [fetchImagesKey, setFetchImagesKey] = useState(0);
@@ -122,6 +123,7 @@ export default function Dashboard({ code, socket }) {
             })
 
             setRoomId(req.data["_id"])
+            setRoomCode(req.data["code"])
             setCustomQueue(req.data["queue"])
             setGameLinks(req.data["links"])
             socket.emit("join_room", req.data["_id"]);
@@ -132,7 +134,7 @@ export default function Dashboard({ code, socket }) {
         }
         catch (err) {
             localStorage.removeItem("token")
-            navigate("/UserLogin")
+            navigate("/")
             alert("invalid login status, please login again")
             return
         }
@@ -146,14 +148,14 @@ export default function Dashboard({ code, socket }) {
             if (!user) {
                 localStorage.removeItem("token")
                 alert("Invalid Token")
-                navigate("/UserLogin")
+                navigate("/")
             } else {
                 // test
                 getRoomInfo();
             }
         }
         else {
-            navigate("/UserLogin")
+            navigate("/")
             alert("To start, you must login first")
         }
     }, [])
@@ -237,7 +239,7 @@ export default function Dashboard({ code, socket }) {
         }
         catch (err) {
             localStorage.removeItem("token")
-            navigate("/UserLogin")
+            navigate("/")
             alert("invalid login status, please login again")
             return
         }
@@ -256,7 +258,7 @@ export default function Dashboard({ code, socket }) {
 
     return (
         <div>
-            {activeComponent !== 'Setting' && <div><RoomInfo roomId={roomId} partyName={partyName} setPartyName={setPartyName}
+            {activeComponent !== 'Setting' && <div><RoomInfo roomId={roomCode} partyName={partyName} setPartyName={setPartyName}
                 location={location} setLocation={setLocation} date={date} setDate={setDate}
                 key={fetchRoomInfoKey} />
                 {/* <input type="button" value="dismiss room" onClick={dismissRoom} /> */}
