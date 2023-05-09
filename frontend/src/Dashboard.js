@@ -276,11 +276,11 @@ export default function Dashboard({ code, socket }) {
 
             {activeComponent === 'Album' && <div>
                 <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
-                <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} /></div>}
+                <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} isHost={true}/></div>}
             <br />
 
             {activeComponent === 'Link' &&
-                <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} />
+                <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} isHost={true}/>
             }
             <br />
 

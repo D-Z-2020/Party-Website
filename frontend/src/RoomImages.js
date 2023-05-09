@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const RoomImages = ({ roomId, handleImageDeleted}) => {
+const RoomImages = ({ roomId, handleImageDeleted, isHost}) => {
     const [images, setImages] = useState([]);
 
     useEffect(() => {
@@ -60,7 +60,7 @@ const RoomImages = ({ roomId, handleImageDeleted}) => {
                         <button onClick={() => downloadImage(`http://localhost:3001` + image, `Room-${roomId}-Image-${index + 1}`)}>
                             Download
                         </button>
-                        <button onClick={() => deleteImage(image, index)}>Delete</button>
+                        {isHost && <button onClick={() => deleteImage(image, index)}>Delete</button>}
                     </div>
                 ))}
             </div>

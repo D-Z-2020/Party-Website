@@ -243,11 +243,11 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
 
             {activeComponent === 'Album' && <div>
                 <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
-                <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} /></div>}
+                <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} isHost={false}/></div>}
             <br />
 
             {activeComponent === 'Link' &&
-                <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} />
+                <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} isHost={false} />
             }
             <br />
 
