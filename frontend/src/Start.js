@@ -16,7 +16,7 @@ const socket = io('http://localhost:3001');
 export default function Start() {
     const navigate = useNavigate();
     const location = useLocation();
-    const [roomIdToJoin, setRoomIdToJoin] = useState("")
+    const [roomCodeToJoin, setRoomCodeToJoin] = useState("")
     const [roomInfo, setRoomInfo] = useState()
     const [isNonHost, setIsNonHost] = useState(false)
     const [globalIsPremium, setGlobalIsPremium] = useState(true)
@@ -71,7 +71,7 @@ export default function Start() {
         }
     }, [])
 
-    const joinRoom = async (e, optionalRoomId = null) => {
+    const joinRoom = async (e, optionalRoomCode = null) => {
         e.preventDefault();
         try {
             const req1 = await axios.get("http://localhost:3001/userRoom", {
@@ -86,7 +86,7 @@ export default function Start() {
                 headers: {
                     'x-access-token': localStorage.getItem("token")
                 },
-                code: optionalRoomId ? optionalRoomId : roomIdToJoin
+                code: optionalRoomCode ? optionalRoomCode : roomCodeToJoin
             })
 
             console.log("join_room", req.data["_id"])
@@ -129,7 +129,7 @@ export default function Start() {
                 // alert("no prev room")
                 return
             }
-            setRoomIdToJoin(req.data);
+            setRoomCodeToJoin(req.data);
             joinRoom(new SubmitEvent("submit"), req.data);
         }
         catch (err) {
@@ -154,14 +154,14 @@ export default function Start() {
                 {/* <form onSubmit={(e) => joinRoom(e)}>
                     <input
                         className='roomIdField'
-                        value={roomIdToJoin}
-                        onChange={(e) => setRoomIdToJoin(e.target.value)}
+                        value={roomCodeToJoin}
+                        onChange={(e) => setRoomCodeToJoin(e.target.value)}
                         type="text"
                         placeholder='room id to join'
                         required={true} />
                     <input className='roomIdButton' type="submit" value="JOIN" />
                 </form> */}
-                {showJoinRoomForm && <JoinRoomForm joinRoom={joinRoom} roomIdToJoin ={roomIdToJoin} setRoomIdToJoin={setRoomIdToJoin} setShowJoinRoomForm={setShowJoinRoomForm}/>}
+                {showJoinRoomForm && <JoinRoomForm joinRoom={joinRoom} roomCodeToJoin ={roomCodeToJoin} setRoomCodeToJoin={setRoomCodeToJoin} setShowJoinRoomForm={setShowJoinRoomForm}/>}
                 {/* <input type="button" value="restore previous room" onClick={restorePrevRoom} /> */}
                 {!showJoinRoomForm && <RoleSelection globalIsPremium={globalIsPremium} restorePrevRoom={restorePrevRoom} AUTH_URL={AUTH_URL} AUTH_URL_SHOW_DIALOG={AUTH_URL_SHOW_DIALOG} setShowJoinRoomForm={setShowJoinRoomForm}/>}
             </div>)}

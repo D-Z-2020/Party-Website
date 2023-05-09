@@ -208,7 +208,6 @@ app.post('/joinRoom', async (req, res) => {
             })
 
             let newRoom;
-            console.log(newRoomCode)
             try {
                 newRoom = await Room.findOne({
                     code: newRoomCode,

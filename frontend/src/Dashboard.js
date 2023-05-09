@@ -258,7 +258,7 @@ export default function Dashboard({ code, socket }) {
 
     return (
         <div>
-            {activeComponent !== 'Setting' && <div><RoomInfo roomId={roomCode} partyName={partyName} setPartyName={setPartyName}
+            {activeComponent !== 'Setting' && <div><RoomInfo roomCode={roomCode} partyName={partyName} setPartyName={setPartyName}
                 location={location} setLocation={setLocation} date={date} setDate={setDate}
                 key={fetchRoomInfoKey} />
                 {/* <input type="button" value="dismiss room" onClick={dismissRoom} /> */}

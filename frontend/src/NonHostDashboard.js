@@ -229,7 +229,7 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
     return (
         <div>
             {activeComponent !== 'Confirmation' &&
-                <div><RoomInfo roomId={roomCode} partyName={partyName} setPartyName={setPartyName}
+                <div><RoomInfo roomCode={roomCode} partyName={partyName} setPartyName={setPartyName}
                     location={location} setLocation={setLocation} date={date} setDate={setDate}
                     key={fetchRoomInfoKey} />
 
