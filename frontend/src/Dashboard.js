@@ -255,60 +255,108 @@ export default function Dashboard({ code, socket }) {
         socket.emit("image_upload", { room: roomId });
     };
 
+    useEffect(() => {
+        function handleResize() {
+            console.log(activeComponent)
+            try {
+                if (activeComponent === 'Music') {
+                    let height = window.screen.height - document.getElementById('header').clientHeight - document.getElementById('footer').clientHeight - 100
+                    if (height > 484) {
+                        height = 484
+                    }
+                    document.getElementById("queue").style.height = `${height}px`;
+                    document.getElementById("search").style.height = `${height}px`;
+                }
+            }
+            catch (err) {
+
+            }
+        }
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [activeComponent]);
 
     return (
-        <div>
-            {activeComponent !== 'Setting' && <div><RoomInfo roomCode={roomCode} partyName={partyName} setPartyName={setPartyName}
-                location={location} setLocation={setLocation} date={date} setDate={setDate}
-                key={fetchRoomInfoKey} />
-                {/* <input type="button" value="dismiss room" onClick={dismissRoom} /> */}
+        <div className="container-fluid">
+            <div className="row">
+                <div className="col-4">
+                    {activeComponent !== 'Setting' &&
+                        <>
+                            <div className="row">
+                                <div className="col-12">
+                                    <RoomInfo roomCode={roomCode} partyName={partyName} setPartyName={setPartyName}
+                                        location={location} setLocation={setLocation} date={date} setDate={setDate}
+                                        key={fetchRoomInfoKey} />
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className="col-8 d-flex flex-column">
+                                    <input className="btn btn-primary mt-3" type="button" value="Music" onClick={() => showComponent('Music')} />
+                                    <input className="btn btn-primary mt-3" type="button" value="Album" onClick={() => showComponent('Album')} />
+                                    <input className="btn btn-primary mt-3" type="button" value="Game" onClick={() => showComponent('Link')} />
+                                    <input className="btn btn-primary mt-3" type="button" value="Setting" onClick={() => showComponent('Setting')} />
+                                </div>
+                            </div>
+                        </>}
+                </div>
+
+                {activeComponent === 'Setting' && <Setting roomId={roomId} partyName={partyName} setPartyName={setPartyName}
+                    location={location} setLocation={setLocation} date={date} setDate={setDate} socket={socket} setActiveComponent={setActiveComponent}
+                    dismissRoom={dismissRoom}
+                />}
                 <br />
 
-                <input type="button" value="setting" onClick={() => showComponent('Setting')} />
-                <input type="button" value="view album" onClick={() => showComponent('Album')} />
-                <input type="button" value="show link" onClick={() => showComponent('Link')} />
-                <input type="button" value="show music" onClick={() => showComponent('Music')} />
-            </div>}
+                {activeComponent === 'Album' && <div className="col-8">
+                    <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
+                    <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} isHost={true} /></div>}
 
-            {activeComponent === 'Setting' && <Setting roomId={roomId} partyName={partyName} setPartyName={setPartyName}
-                location={location} setLocation={setLocation} date={date} setDate={setDate} socket={socket} setActiveComponent={setActiveComponent}
-                dismissRoom={dismissRoom}
-            />}
-            <br />
 
-            {activeComponent === 'Album' && <div>
-                <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
-                <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} isHost={true}/></div>}
-            <br />
+                {activeComponent === 'Link' &&
+                    <div className="col-8">
+                        <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} isHost={true} />
 
-            {activeComponent === 'Link' &&
-                <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} isHost={true}/>
-            }
-            <br />
+                    </div>}
 
-            {activeComponent === 'Music' &&
-                <div>
-                    <input type="text" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
-                    </input>
-                    <b style={{ display: 'block' }}>Search Result</b>
-                    <div style={{ overflowY: "auto", height: "30vh" }}>
-                        {searchResults.map(track =>
-                            (<TrackSearchResult track={track} key={track.uri} chooseTrack={addTrack} />))}
+
+                {activeComponent === 'Music' &&
+                    <div className="col-5">
+                        <input type="text" className="form-group" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
+                        </input>
+                        <div style={{ overflowY: "auto" }} id="search">
+                            {searchResults.map(track =>
+                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={addTrack} />))}
+                        </div>
                     </div>
-                    <p>--------------------------</p>
-                    <b>Queue</b>
-                    <div style={{ overflowY: "auto", height: "40vh" }}>
-                        {customQueue.map(track =>
-                            (<TrackSearchResult track={track} key={track.uri} chooseTrack={playTrack} />))}
+                }
+
+
+                {activeComponent === 'Music' &&
+                    <div className="col-3">
+                        <b>Queue</b>
+                        <div style={{ overflowY: "auto" }} id="queue">
+                            {customQueue.map(track =>
+                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={playTrack} />))}
+                        </div>
                     </div>
+                }
+
+                <div className="fixed-bottom" id="footer">
+                    <Player
+                        accessToken={accessToken}
+                        trackUri={playingTrack?.uri}
+                        playingTrack={playingTrack}
+                        setPlayingTrack={setPlayingTrack}
+                        customQueue={customQueue}
+                        updateQueue={setCustomQueue}
+                    />
                 </div>
-            }
-
-            <div style={{ position: 'fixed', bottom: "0%", width: "100%" }}><Player accessToken={accessToken} trackUri={playingTrack?.uri}
-                playingTrack={playingTrack}
-                setPlayingTrack={setPlayingTrack}
-                customQueue={customQueue}
-                updateQueue={setCustomQueue} /></div>
+            </div>
         </div>
     )
 }

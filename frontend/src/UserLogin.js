@@ -3,7 +3,7 @@ import { useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-export default function UserLogin({setUserName}) {
+export default function UserLogin({ setUserName }) {
     const navigate = useNavigate()
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
@@ -16,7 +16,6 @@ export default function UserLogin({setUserName}) {
                 password: password
             })
             alert("login success!")
-            //console.log(response)
             setUserName(name)
             localStorage.setItem("token", response.data.token)
             navigate("/start")
@@ -29,22 +28,25 @@ export default function UserLogin({setUserName}) {
 
     return (
         <div>
-            <h3>User Login</h3>
             <form onSubmit={login}>
                 <input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     type="text"
+                    className="form-control"
                     placeholder='name'
                     required={true} />
-
+                <br />
                 <input
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     type="text"
+                    className="form-control"
                     placeholder='password'
                     required={true} />
-                <input type="submit" value="Login" />
+                <div className="text-center my-3">
+                    <input className="btn btn-primary" type="submit" value="Login" />
+                </div>
             </form>
         </div>
     )

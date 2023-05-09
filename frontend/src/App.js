@@ -10,7 +10,6 @@ function App() {
 
   useEffect(() => {
     const token = localStorage.getItem("token")
-    //console.log(token)
     if (token) {
       const user = decodeToken(token)
       if (!user) {

@@ -16,10 +16,16 @@ export default function Home({ setUserName }) {
 
   return (
     <div>
-      <h1>Party App</h1>
-      <input type="button" value={isLogin ? "go register" : "go login"} onClick={() => setIsLogin(!isLogin)} />
-      {isLogin && <UserLogin setUserName={setUserName} />}
-      {!isLogin && <UserRegister setUserName={setUserName} />}
+      <div className="row justify-content-center">
+        <h1 className="text-center my-3">Welcome to MSc in Partying</h1>
+        <div className="col-md-6">
+          <div className='text-center my-3'>
+            <input type="button" className="btn btn-primary" value={isLogin ? "Go Register" : "Go Login"} onClick={() => setIsLogin(!isLogin)} />
+          </div>
+          {isLogin && <UserLogin setUserName={setUserName} />}
+          {!isLogin && <UserRegister setUserName={setUserName} />}
+        </div>
+      </div>
     </div>
   )
 }

@@ -130,7 +130,6 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
 
     useEffect(() => {
         const token = localStorage.getItem("token")
-        //console.log(token)
         if (token) {
             const user = decodeToken(token)
             if (!user) {
@@ -226,51 +225,90 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
         socket.emit("image_upload", { room: roomId });
     };
 
+    useEffect(() => {
+        function handleResize() {
+            console.log(activeComponent)
+            try {
+                if (activeComponent === 'Music') {
+                    let height = window.screen.height - document.getElementById('header').clientHeight - 160
+                    document.getElementById("queue2").style.height = `${height}px`;
+                    document.getElementById("search2").style.height = `${height}px`;
+                }
+            }
+            catch (err) {
+
+            }
+        }
+
+        handleResize();
+        window.addEventListener('resize', handleResize);
+
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
+    }, [activeComponent]);
+
     return (
-        <div>
-            {activeComponent !== 'Confirmation' &&
-                <div><RoomInfo roomCode={roomCode} partyName={partyName} setPartyName={setPartyName}
-                    location={location} setLocation={setLocation} date={date} setDate={setDate}
-                    key={fetchRoomInfoKey} />
-
-                    <input type="button" value="leave room" onClick={() => showComponent('Confirmation')} />
-                    <input type="button" value="view album" onClick={() => showComponent('Album')} />
-                    <input type="button" value="show link" onClick={() => showComponent('Link')} />
-                    <input type="button" value="show music" onClick={() => showComponent('Music')} />
-                </div>}
-
-            {activeComponent === 'Confirmation' &&
-                <ConfirmationPage handleConfirm={leaveRoom} handleCancel={() => showComponent('Music')} />}
-            <br />
-
-            {activeComponent === 'Album' && <div>
-                <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
-                <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} isHost={false}/></div>}
-            <br />
-
-            {activeComponent === 'Link' &&
-                <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} isHost={false} />
-            }
-            <br />
-
-            {activeComponent === 'Music' &&
-                <div>
-                    <input type="text" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
-                    </input>
-                    <b style={{ display: 'block' }}>Search Result</b>
-                    <div style={{ overflowY: "auto", height: "30vh" }}>
-                        {searchResults.map(track =>
-                            (<TrackSearchResult track={track} key={track.uri} chooseTrack={addTrack} />))}
-                    </div>
-                    <p>--------------------------</p>
-                    <b>Queue</b>
-                    <div style={{ overflowY: "auto", height: "40vh" }}>
-                        {customQueue.map(track =>
-                            (<TrackSearchResult track={track} key={track.uri} chooseTrack={showInfo} />))}
-                    </div>
+        <div className="container-fluid">
+            <div className="row">
+                <div className="col-4">
+                    {activeComponent !== 'Confirmation' &&
+                        <>
+                            <div className="row">
+                                <div className="col-12">
+                                    <RoomInfo roomCode={roomCode} partyName={partyName} setPartyName={setPartyName}
+                                        location={location} setLocation={setLocation} date={date} setDate={setDate}
+                                        key={fetchRoomInfoKey} />
+                                    {/* <input type="button" value="dismiss room" onClick={dismissRoom} /> */}
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-8 d-flex flex-column">
+                                    <input className="btn btn-primary mt-3" type="button" value="Leave" onClick={() => showComponent('Confirmation')} />
+                                    <input className="btn btn-primary mt-3" type="button" value="Album" onClick={() => showComponent('Album')} />
+                                    <input className="btn btn-primary mt-3" type="button" value="Game" onClick={() => showComponent('Link')} />
+                                    <input className="btn btn-primary mt-3" type="button" value="Music" onClick={() => showComponent('Music')} />
+                                </div>
+                            </div>
+                        </>}
                 </div>
-            }
-        </div>
+
+                {activeComponent === 'Confirmation' &&
+                    <ConfirmationPage handleConfirm={leaveRoom} handleCancel={() => showComponent('Music')} />}
+                <br />
+
+                {activeComponent === 'Album' && <div className="col-8">
+                    <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
+                    <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} isHost={false} /></div>}
+
+                {activeComponent === 'Link' && <div className="col-8">
+                    <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} isHost={false} />
+                </div>
+                }
+
+                {activeComponent === 'Music' &&
+                    <div className="col-5">
+                        <input type="text" className="form-group" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
+                        </input>
+                        <div style={{ overflowY: "auto" }} id="search2">
+                            {searchResults.map(track =>
+                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={addTrack} />))}
+                        </div>
+                    </div>
+                }
+
+
+                {activeComponent === 'Music' &&
+                    <div className="col-3">
+                        <b>Queue</b>
+                        <div style={{ overflowY: "auto" }} id="queue2">
+                            {customQueue.map(track =>
+                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={showInfo} />))}
+                        </div>
+                    </div>
+                }
+            </div>
+        </div >
     )
 }
 

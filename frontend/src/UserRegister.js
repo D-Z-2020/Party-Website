@@ -3,7 +3,7 @@ import { useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-export default function UserRegister({setUserName}) {
+export default function UserRegister({ setUserName }) {
     const navigate = useNavigate()
     const [name, setName] = useState("")
     const [password, setPassword] = useState("")
@@ -34,22 +34,25 @@ export default function UserRegister({setUserName}) {
 
     return (
         <div>
-            <h3>User Register</h3>
             <form onSubmit={register}>
                 <input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     type="text"
+                    className="form-control"
                     placeholder='name'
                     required={true} />
-
+                <br />
                 <input
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     type="text"
+                    className="form-control"
                     placeholder='password'
                     required={true} />
-                <input type="submit" value="Register" />
+                <div className="text-center my-3">
+                    <input className="btn btn-primary" type="submit" value="Register" />
+                </div>
             </form>
         </div>
     )
