@@ -1,0 +1,30 @@
+{
+  "id": "4033099",
+  "name": "react",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "716048",
+      "name": "音乐",
+      "font_class": "yinle",
+      "unicode": "e644",
+      "unicode_decimal": 58948
+    },
+    {
+      "icon_id": "1311628",
+      "name": "相册",
+      "font_class": "xiangce",
+      "unicode": "e60c",
+      "unicode_decimal": 58892
+    },
+    {
+      "icon_id": "6665569",
+      "name": "游戏",
+      "font_class": "airudiantubiaohuizhi-zhuanqu_youxi",
+      "unicode": "e69d",
+      "unicode_decimal": 59037
+    }
+  ]
+}
