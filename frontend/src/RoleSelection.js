@@ -13,9 +13,9 @@ function RoleSelection({ globalIsPremium, restorePrevRoom, AUTH_URL, AUTH_URL_SH
             anchor.click();
             document.body.removeChild(anchor);
         }
-        else if (selectedOption === "Restore") {
-            restorePrevRoom();
-        }
+        // else if (selectedOption === "Restore") {
+        //     restorePrevRoom();
+        // }
         else {
             setShowJoinRoomForm(true)
         }
@@ -50,7 +50,7 @@ function RoleSelection({ globalIsPremium, restorePrevRoom, AUTH_URL, AUTH_URL_SH
                     Participant
                 </label>
                 <br />
-                <label>
+                {/* <label>
                     <input
                         type="radio"
                         name="option"
@@ -60,7 +60,7 @@ function RoleSelection({ globalIsPremium, restorePrevRoom, AUTH_URL, AUTH_URL_SH
                     />
                     Restore
                 </label>
-                <br />
+                <br /> */}
                 <button type="submit">Continue</button>
             </form>
         </div>

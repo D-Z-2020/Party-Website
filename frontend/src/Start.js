@@ -124,19 +124,27 @@ export default function Start() {
                 },
             })
 
-            console.log(req.data)
+
             if (!req.data) {
-                alert("no prev room")
+                // alert("no prev room")
                 return
             }
             setRoomIdToJoin(req.data);
             joinRoom(new SubmitEvent("submit"), req.data);
         }
         catch (err) {
+            alert("something wrong, please login again")
             localStorage.removeItem("token")
             navigate("/")
         }
     }
+
+    useEffect(()=>{
+        console.log(!isNonHost)
+        if (localStorage.getItem("token") && !isNonHost && !code) {
+            restorePrevRoom();
+        }
+    },[])
 
     const code = new URLSearchParams(window.location.search).get('code')
     //console.log(code)
