@@ -6,7 +6,7 @@ export default function useClientCredential() {
     const [expiresIn, setExpiresIn] = useState();
 
     useEffect(() => {
-        axios.get('http://localhost:3001/ClientCredentialsFlow')
+        axios.get('http://localhost:3001/clientCredentialsFlow')
             .then(res => {
                 setAccessToken(res.data["accessToken"])
                 setExpiresIn(res.data["expiresIn"])
@@ -19,7 +19,7 @@ export default function useClientCredential() {
     useEffect(() => {
         if (!expiresIn) return
         const interval = setInterval(() => {
-            axios.get('http://localhost:3001/ClientCredentialsFlow')
+            axios.get('http://localhost:3001/clientCredentialsFlow')
                 .then(res => {
                     setAccessToken(res.data["accessToken"])
                     setExpiresIn(res.data["expiresIn"])

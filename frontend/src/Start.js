@@ -13,7 +13,7 @@ const AUTH_URL = "https://accounts.spotify.com/authorize?client_id=5c9e849201d24
 const AUTH_URL_SHOW_DIALOG = AUTH_URL + "&show_dialog=true"
 
 const socket = io('http://localhost:3001');
-export default function Start() {
+export default function Start({setUserName}) {
     const navigate = useNavigate();
     const location = useLocation();
     const [roomCodeToJoin, setRoomCodeToJoin] = useState("")
@@ -30,27 +30,6 @@ export default function Start() {
         }
     }, [location.state?.isPremium])
 
-
-    // console.log(globalIsPremium)
-    // test
-    async function pop() {
-        try {
-            const req = await axios.get("http://localhost:3001/pop", {
-                headers: {
-                    'x-access-token': localStorage.getItem("token")
-                }
-            })
-
-            console.log(req.data)
-        }
-        catch (err) {
-            localStorage.removeItem("token")
-            navigate("/")
-            alert("invalid login status, please login again")
-        }
-    }
-
-
     useEffect(() => {
         const token = localStorage.getItem("token")
         //console.log(token)
@@ -60,13 +39,12 @@ export default function Start() {
                 localStorage.removeItem("token")
                 alert("Invalid Token")
                 navigate("/")
-            } else {
-                // test
-                pop();
+                setUserName("")
             }
         }
         else {
             navigate("/")
+            setUserName("")
             alert("To start, you must login first")
         }
     }, [])
@@ -101,7 +79,6 @@ export default function Start() {
                 return
             }
             if ((req.status) === 202) {
-                console.log("status 202")
                 socket.emit("host_room_dismissed", prevRoomId);
             }
             setIsNonHost(true)
@@ -109,9 +86,10 @@ export default function Start() {
         }
         catch (err) {
             alert(err.response.data)
-            if ((err.response.status) === 403) {
+            if ((err.response.status) === 401) {
                 localStorage.removeItem("token")
                 navigate("/")
+                setUserName("")
             }
         }
     }
@@ -123,10 +101,7 @@ export default function Start() {
                     'x-access-token': localStorage.getItem("token")
                 },
             })
-
-
             if (!req.data) {
-                // alert("no prev room")
                 return
             }
             setRoomCodeToJoin(req.data);
@@ -134,36 +109,25 @@ export default function Start() {
         }
         catch (err) {
             alert("something wrong, please login again")
+            setUserName("")
             localStorage.removeItem("token")
             navigate("/")
         }
     }
 
-    useEffect(()=>{
+    useEffect(() => {
         console.log(!isNonHost)
         if (localStorage.getItem("token") && !isNonHost && !code) {
             restorePrevRoom();
         }
-    },[])
+    }, [])
 
     const code = new URLSearchParams(window.location.search).get('code')
-    //console.log(code)
     return (
         <div>
             {isNonHost ? <NonHostDashboard roomInfo={roomInfo} socket={socket} globalIsPremium={globalIsPremium} setIsNonHost={setIsNonHost} /> : (code ? <Dashboard code={code} socket={socket} /> : <div>
-                {/* <form onSubmit={(e) => joinRoom(e)}>
-                    <input
-                        className='roomIdField'
-                        value={roomCodeToJoin}
-                        onChange={(e) => setRoomCodeToJoin(e.target.value)}
-                        type="text"
-                        placeholder='room id to join'
-                        required={true} />
-                    <input className='roomIdButton' type="submit" value="JOIN" />
-                </form> */}
-                {showJoinRoomForm && <JoinRoomForm joinRoom={joinRoom} roomCodeToJoin ={roomCodeToJoin} setRoomCodeToJoin={setRoomCodeToJoin} setShowJoinRoomForm={setShowJoinRoomForm}/>}
-                {/* <input type="button" value="restore previous room" onClick={restorePrevRoom} /> */}
-                {!showJoinRoomForm && <RoleSelection globalIsPremium={globalIsPremium} restorePrevRoom={restorePrevRoom} AUTH_URL={AUTH_URL} AUTH_URL_SHOW_DIALOG={AUTH_URL_SHOW_DIALOG} setShowJoinRoomForm={setShowJoinRoomForm}/>}
+                {showJoinRoomForm && <JoinRoomForm joinRoom={joinRoom} roomCodeToJoin={roomCodeToJoin} setRoomCodeToJoin={setRoomCodeToJoin} setShowJoinRoomForm={setShowJoinRoomForm} />}
+                {!showJoinRoomForm && <RoleSelection globalIsPremium={globalIsPremium} restorePrevRoom={restorePrevRoom} AUTH_URL={AUTH_URL} AUTH_URL_SHOW_DIALOG={AUTH_URL_SHOW_DIALOG} setShowJoinRoomForm={setShowJoinRoomForm} />}
             </div>)}
         </div>
     )

@@ -24,7 +24,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Layout userName={userName} setUserName={setUserName} />}>
         <Route index element={<Home setUserName={setUserName}/>} />
-        <Route path="start" element={<Start />} />
+        <Route path="start" element={<Start setUserName={setUserName}/>} />
       </Route>
     </Routes>
   );

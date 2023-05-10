@@ -32,9 +32,7 @@ const login = async (req, res) => {
     spotifyApi.setAccessToken(accessToken);
     await spotifyApi.getMe()
         .then((data) => {
-            console.log('Profile information:', data.body);
             isPremium = data.body.product === 'premium'
-            console.log('Is user premium:', isPremium);
         });
 
     res.json({
