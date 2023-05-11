@@ -2,8 +2,9 @@ import React from 'react'
 
 export default function JoinRoomForm({ joinRoom, roomIdToJoin, setRoomCodeToJoin, setShowJoinRoomForm }) {
     return (
-        <div className="container">
-
+        <div className="container p-2">
+			<div class="card">
+			<div class="card-body">
             <div className="row justify-content-center">
                 <div className="col-md-10 text-center mt-5">
                     <h1>Enter 4 Digits Room Code</h1>
@@ -27,6 +28,8 @@ export default function JoinRoomForm({ joinRoom, roomIdToJoin, setRoomCodeToJoin
                         <input className="btn btn-primary w-100 my-3" type="button" value="back" onClick={() => setShowJoinRoomForm(false)} />
                     </div>
                 </div>
+            </div>
+			</div>
             </div>
         </div>
 

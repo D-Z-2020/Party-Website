@@ -37,7 +37,7 @@ function RoleSelection({ globalIsPremium, restorePrevRoom, AUTH_URL, AUTH_URL_SH
     };
 
     return (
-        <div className="container d-flex align-items-center justify-content-center" style={{ height: "80vh" }}>
+        <div className="container d-flex align-items-center justify-content-center" style={{ height: "80vh"}}>
             <form onSubmit={handleSubmit}>
                 <div className="row my-4">
                     <div className="col-12 text-center">
@@ -73,7 +73,7 @@ function RoleSelection({ globalIsPremium, restorePrevRoom, AUTH_URL, AUTH_URL_SH
                 <br />
                 <div className="row">
                     <div className="col-12 text-center">
-                        <button type="submit" className="btn btn-primary mt-3">
+                        <button type="submit" className="btn btn-success mt-3">
                             Continue
                         </button>
                     </div>

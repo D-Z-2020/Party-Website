@@ -8,12 +8,13 @@ import axios from 'axios';
 import io from 'socket.io-client';
 import RoleSelection from './RoleSelection';
 import JoinRoomForm from './JoinRoomForm';
+import background from './assets/image/pexels-photo-164853.webp'
 
 const AUTH_URL = "https://accounts.spotify.com/authorize?client_id=5c9e849201d24dfb8f563a7a081e3be9&response_type=code&redirect_uri=http://localhost:3000/start/&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state"
 const AUTH_URL_SHOW_DIALOG = AUTH_URL + "&show_dialog=true"
 
 const socket = io('http://localhost:3001');
-export default function Start({setUserName}) {
+export default function Start({ setUserName }) {
     const navigate = useNavigate();
     const location = useLocation();
     const [roomCodeToJoin, setRoomCodeToJoin] = useState("")
@@ -124,11 +125,13 @@ export default function Start({setUserName}) {
 
     const code = new URLSearchParams(window.location.search).get('code')
     return (
-        <div>
-            {isNonHost ? <NonHostDashboard roomInfo={roomInfo} socket={socket} globalIsPremium={globalIsPremium} setIsNonHost={setIsNonHost} /> : (code ? <Dashboard code={code} socket={socket} /> : <div>
-                {showJoinRoomForm && <JoinRoomForm joinRoom={joinRoom} roomCodeToJoin={roomCodeToJoin} setRoomCodeToJoin={setRoomCodeToJoin} setShowJoinRoomForm={setShowJoinRoomForm} />}
-                {!showJoinRoomForm && <RoleSelection globalIsPremium={globalIsPremium} restorePrevRoom={restorePrevRoom} AUTH_URL={AUTH_URL} AUTH_URL_SHOW_DIALOG={AUTH_URL_SHOW_DIALOG} setShowJoinRoomForm={setShowJoinRoomForm} />}
-            </div>)}
+        <div className="container text-center">
+            <div className="row">
+                {isNonHost ? <NonHostDashboard roomInfo={roomInfo} socket={socket} globalIsPremium={globalIsPremium} setIsNonHost={setIsNonHost} /> : (code ? <Dashboard code={code} socket={socket} /> : <div>
+                    {showJoinRoomForm && <JoinRoomForm joinRoom={joinRoom} roomCodeToJoin={roomCodeToJoin} setRoomCodeToJoin={setRoomCodeToJoin} setShowJoinRoomForm={setShowJoinRoomForm} />}
+                    {!showJoinRoomForm && <RoleSelection globalIsPremium={globalIsPremium} restorePrevRoom={restorePrevRoom} AUTH_URL={AUTH_URL} AUTH_URL_SHOW_DIALOG={AUTH_URL_SHOW_DIALOG} setShowJoinRoomForm={setShowJoinRoomForm} />}
+                </div>)}
+            </div>
         </div>
     )
 }

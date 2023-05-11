@@ -23,11 +23,15 @@ export default function RoomInfo({ roomCode,partyName,setPartyName,location,setL
     }, [roomCode]);
 
     return (
-        <div>
-            <p>Room Code: {roomCode}</p>
-            <p>party name: {partyName}</p>
-            <p>location: {location}</p>
-            <p>date: {date}</p>
+        <div class="col p-2">
+			<div class="card">
+				<div class="card-body">
+					<p>Room Code: {roomCode}</p>
+					<p>party name: {partyName}</p>
+					<p>location: {location}</p>
+					<p>date: {date}</p>
+				</div>
+			</div>
         </div>
     )
 }

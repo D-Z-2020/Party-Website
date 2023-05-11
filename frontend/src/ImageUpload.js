@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const ImageUpload = ({roomId, onImageUploaded}) => {
+const ImageUpload = ({ roomId, onImageUploaded }) => {
     const [selectedFile, setSelectedFile] = useState(null);
 
     const onFileChange = (e) => {
@@ -26,10 +26,14 @@ const ImageUpload = ({roomId, onImageUploaded}) => {
 
     return (
         <div>
-            <form onSubmit={onFileUpload}>
-                <input type="file" name="image" accept="image/*" onChange={onFileChange} />
-                <button type="submit">Upload</button>
-            </form>
+            <div class="card">
+                <div class="card-body">
+                    <form onSubmit={onFileUpload}>
+                        <input type="file" name="image" accept="image/*" onChange={onFileChange} />
+                        <button type="submit" class="btn btn-success">Upload</button>
+                    </form>
+                </div>
+            </div>
         </div>
     );
 };

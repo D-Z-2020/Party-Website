@@ -255,40 +255,15 @@ export default function Dashboard({ code, socket }) {
         socket.emit("image_upload", { room: roomId });
     };
 
-    useEffect(() => {
-        function handleResize() {
-            console.log(activeComponent)
-            try {
-                if (activeComponent === 'Music') {
-                    let height = window.screen.height - document.getElementById('header').clientHeight - document.getElementById('footer').clientHeight - 100
-                    if (height > 484) {
-                        height = 484
-                    }
-                    document.getElementById("queue").style.height = `${height}px`;
-                    document.getElementById("search").style.height = `${height}px`;
-                }
-            }
-            catch (err) {
-
-            }
-        }
-
-        handleResize();
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [activeComponent]);
-
+    const [playerKey, setPlayerKey] = useState(0)
     return (
         <div className="container-fluid">
             <div className="row">
-                <div className="col-4">
+                <div className="col-md-4">
                     {activeComponent !== 'Setting' &&
                         <>
                             <div className="row">
-                                <div className="col-12">
+                                <div className="col-md-12">
                                     <RoomInfo roomCode={roomCode} partyName={partyName} setPartyName={setPartyName}
                                         location={location} setLocation={setLocation} date={date} setDate={setDate}
                                         key={fetchRoomInfoKey} />
@@ -296,7 +271,7 @@ export default function Dashboard({ code, socket }) {
                             </div>
 
                             <div className="row">
-                                <div className="col-8 d-flex flex-column">
+                                <div className="col-md-8 d-flex flex-column mx-auto">
                                     <input className="btn btn-primary mt-3" type="button" value="Music" onClick={() => showComponent('Music')} />
                                     <input className="btn btn-primary mt-3" type="button" value="Album" onClick={() => showComponent('Album')} />
                                     <input className="btn btn-primary mt-3" type="button" value="Game" onClick={() => showComponent('Link')} />
@@ -312,22 +287,22 @@ export default function Dashboard({ code, socket }) {
                 />}
                 <br />
 
-                {activeComponent === 'Album' && <div className="col-8">
+                {activeComponent === 'Album' && <div className="col-md-8" style={{ height: "80vh", overflowY: "auto" }}>
                     <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
                     <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} isHost={true} /></div>}
 
 
                 {activeComponent === 'Link' &&
-                    <div className="col-8">
+                    <div className="col-md-8" style={{ height: "80vh", overflowY: "auto" }}>
                         <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} isHost={true} />
 
                     </div>}
 
-
                 {activeComponent === 'Music' &&
-                    <div className="col-5">
-                        <input type="text" className="form-group" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
+                    <div className="col-md-4 card" style={{ height: "80vh", overflowY: "auto" }}>
+                        <input type="text" className="form-control" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
                         </input>
+                        <br />
                         <div style={{ overflowY: "auto" }} id="search">
                             {searchResults.map(track =>
                                 (<TrackSearchResult track={track} key={track.uri} chooseTrack={addTrack} />))}
@@ -337,7 +312,7 @@ export default function Dashboard({ code, socket }) {
 
 
                 {activeComponent === 'Music' &&
-                    <div className="col-3">
+                    <div className="col-md-4 card" style={{ height: "80vh", overflowY: "auto" }}>
                         <b>Queue</b>
                         <div style={{ overflowY: "auto" }} id="queue">
                             {customQueue.map(track =>
@@ -345,18 +320,22 @@ export default function Dashboard({ code, socket }) {
                         </div>
                     </div>
                 }
+            </div>
 
-                <div className="fixed-bottom" id="footer">
+            {activeComponent !== 'Setting' && <div className='row d-flex align-items-end' style={{ height: "13vh" }}>
+                <div className='col-md-12'>
                     <Player
+                        key={playerKey}
                         accessToken={accessToken}
                         trackUri={playingTrack?.uri}
                         playingTrack={playingTrack}
                         setPlayingTrack={setPlayingTrack}
                         customQueue={customQueue}
-                        updateQueue={setCustomQueue}
+                        updateQueue={updateQueue}
+                        setPlayerKey={setPlayerKey}
                     />
                 </div>
-            </div>
+            </div>}
         </div>
     )
 }

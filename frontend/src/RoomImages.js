@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 
-const RoomImages = ({ roomId, handleImageDeleted, isHost}) => {
+const RoomImages = ({ roomId, handleImageDeleted, isHost }) => {
     const [images, setImages] = useState([]);
 
     useEffect(() => {
@@ -45,6 +45,7 @@ const RoomImages = ({ roomId, handleImageDeleted, isHost}) => {
 
     return (
         <div>
+
             <div>
                 {images.map((image, index) => (
                     <div key={index} style={{ display: 'inline-block', margin: '10px' }}>
