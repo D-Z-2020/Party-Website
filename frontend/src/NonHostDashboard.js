@@ -225,29 +225,6 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
         socket.emit("image_upload", { room: roomId });
     };
 
-    useEffect(() => {
-        function handleResize() {
-            console.log(activeComponent)
-            try {
-                if (activeComponent === 'Music') {
-                    let height = window.screen.height - document.getElementById('header').clientHeight - 160
-                    document.getElementById("queue2").style.height = `${height}px`;
-                    document.getElementById("search2").style.height = `${height}px`;
-                }
-            }
-            catch (err) {
-
-            }
-        }
-
-        handleResize();
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-        };
-    }, [activeComponent]);
-
     return (
         <div className="container-fluid">
             <div className="row">
@@ -262,7 +239,7 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
                                     {/* <input type="button" value="dismiss room" onClick={dismissRoom} /> */}
                                 </div>
                             </div>
-                            <div className="row">
+                            <div className="row mb-2">
                                 <div className="col-md-8 d-flex flex-column mx-auto">
                                     <input className="btn btn-primary mt-3" type="button" value="Leave" onClick={() => showComponent('Confirmation')} />
                                     <input className="btn btn-primary mt-3" type="button" value="Album" onClick={() => showComponent('Album')} />
@@ -286,23 +263,23 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
                 </div>
                 }
                 {activeComponent === 'Music' &&
-                    <div className="col-md-4 card" style={{ height: "80vh", overflowY: "auto" }}>
-                        <input type="text" className="form-control" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
+                    <div className="col-md-4 mb-2" style={{ height: "80vh", overflowY: "auto", border: '1px solid #eee' }}>
+                        <input type="text" className="form-control my-2" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
                         </input>
                         <br />
                         <div style={{ overflowY: "auto" }} id="search">
                             {searchResults.map(track =>
-                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={addTrack} />))}
+                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={addTrack} isQueue={false} isNonHost={true}/>))}
                         </div>
                     </div>
                 }
 
                 {activeComponent === 'Music' &&
-                    <div className="col-md-4 card" style={{ height: "80vh", overflowY: "auto" }}>
-                        <b>Queue</b>
+                    <div className="col-md-4" style={{ height: "80vh", overflowY: "auto", border: '1px solid #eee' }}>
+                        <h3>Music Queue</h3>
                         <div style={{ overflowY: "auto" }} id="queue">
                             {customQueue.map(track =>
-                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={showInfo} />))}
+                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={showInfo} isQueue={true} isNonHost={true}/>))}
                         </div>
                     </div>
                 }

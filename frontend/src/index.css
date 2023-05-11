@@ -23,3 +23,7 @@ code {
 bt_green{
 	background-color: #0a7777;
 }
+
+.plusSign {
+  cursor: pointer;
+}

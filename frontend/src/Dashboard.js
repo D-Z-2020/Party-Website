@@ -190,6 +190,10 @@ export default function Dashboard({ code, socket }) {
         }
 
         updateQueue(customQueue.slice(index))
+        // let newQueue = [...customQueue];
+        // let element = newQueue.splice(index, 1)[0];
+        // newQueue.unshift(element);
+        // updateQueue(newQueue)
 
     }
 
@@ -270,7 +274,7 @@ export default function Dashboard({ code, socket }) {
                                 </div>
                             </div>
 
-                            <div className="row">
+                            <div className="row mb-2">
                                 <div className="col-md-8 d-flex flex-column mx-auto">
                                     <input className="btn btn-primary mt-3" type="button" value="Music" onClick={() => showComponent('Music')} />
                                     <input className="btn btn-primary mt-3" type="button" value="Album" onClick={() => showComponent('Album')} />
@@ -299,24 +303,24 @@ export default function Dashboard({ code, socket }) {
                     </div>}
 
                 {activeComponent === 'Music' &&
-                    <div className="col-md-4 card" style={{ height: "80vh", overflowY: "auto" }}>
-                        <input type="text" className="form-control" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
+                    <div className="col-md-4 mb-2" style={{ height: "80vh", overflowY: "auto", border: '1px solid #eee' }}>
+                        <input type="text" className="form-control my-2" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
                         </input>
                         <br />
                         <div style={{ overflowY: "auto" }} id="search">
                             {searchResults.map(track =>
-                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={addTrack} />))}
+                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={addTrack} isQueue={false} isNonHost={false}/>))}
                         </div>
                     </div>
                 }
 
 
                 {activeComponent === 'Music' &&
-                    <div className="col-md-4 card" style={{ height: "80vh", overflowY: "auto" }}>
-                        <b>Queue</b>
+                    <div className="col-md-4" style={{ height: "80vh", overflowY: "auto", border: '1px solid #eee' }}>
+                        <h3>Music Queue</h3>
                         <div style={{ overflowY: "auto" }} id="queue">
                             {customQueue.map(track =>
-                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={playTrack} />))}
+                                (<TrackSearchResult track={track} key={track.uri} chooseTrack={playTrack} isQueue={true} isNonHost={false}/>))}
                         </div>
                     </div>
                 }

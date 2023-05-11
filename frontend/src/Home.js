@@ -3,6 +3,7 @@ import UserLogin from './UserLogin'
 import UserRegister from './UserRegister'
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import backgroundImage from './assets/image/pexels-photo-164853.webp'
 
 export default function Home({ setUserName }) {
   const [isLogin, setIsLogin] = useState(true);
@@ -15,7 +16,14 @@ export default function Home({ setUserName }) {
   }, [])
 
   return (
-    <div>
+    <div style={{
+      backgroundImage: `url(${backgroundImage})`,
+      backgroundPosition: 'center',
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      width: '100%',
+      height: '90vh'
+    }}>
       <div className="row justify-content-center">
         <h1 className="text-center my-3">Welcome to MSc in Partying</h1>
         <div className="col-md-6">
