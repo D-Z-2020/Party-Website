@@ -3,6 +3,7 @@ import p1 from './assets/image/host.png';
 import p1_enable from './assets/image/hostActive.png';
 import p2 from './assets/image/guest.png';
 import p2_enable from './assets/image/guestActive.png';
+import "./styles/Login.css";
 
 function RoleSelection({ globalIsPremium, restorePrevRoom, AUTH_URL, AUTH_URL_SHOW_DIALOG, setShowJoinRoomForm }) {
     const [selectedOption, setSelectedOption] = useState('Host');
@@ -46,7 +47,7 @@ function RoleSelection({ globalIsPremium, restorePrevRoom, AUTH_URL, AUTH_URL_SH
                 </div>
                 <div className="row">
                     <div className="col-sm-6 text-center">
-                        <label>
+                        <label className='roleImg'>
                             <img
                                 width="130"
                                 height="130"
@@ -58,7 +59,7 @@ function RoleSelection({ globalIsPremium, restorePrevRoom, AUTH_URL, AUTH_URL_SH
                         </label>
                     </div>
                     <div className="col-sm-6 text-center">
-                        <label>
+                        <label className='roleImg'>
                             <img
                                 width="130"
                                 height="130"
@@ -73,7 +74,7 @@ function RoleSelection({ globalIsPremium, restorePrevRoom, AUTH_URL, AUTH_URL_SH
                 <br />
                 <div className="row">
                     <div className="col-12 text-center">
-                        <button type="submit" className="btn btn-success mt-3">
+                        <button type="submit" className="button btn btn-primary mt-3">
                             Continue
                         </button>
                     </div>
