@@ -1,13 +1,19 @@
 import React from 'react'
-import UserLogin from './UserLogin'
-import UserRegister from './UserRegister'
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import backgroundImage from './assets/image/pexels-photo-164853.webp'
+import axios from 'axios';
+
+import "./styles/Home.css";
+import "./styles/Login.css";
 
 export default function Home({ setUserName }) {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+  const [step, setStep] = useState("1");
+  const [name, setName] = useState("")
+  const [password, setPassword] = useState("")
+  const [passwordErr, setPasswordErr] = useState(false);
+  const [err, setErr] = useState(false);
 
   useEffect(() => {
     if (isLogin && localStorage.getItem("token")) {
@@ -15,23 +21,106 @@ export default function Home({ setUserName }) {
     }
   }, [])
 
+  const btn_submit = async (e) => {
+    e.preventDefault();
+    if (step === "1") {
+      try {
+        const response = await axios.post('http://localhost:3001/userLogin', {
+          name: name,
+          password: password
+        })
+        alert("login success!")
+        setUserName(name)
+        localStorage.setItem("token", response.data.token)
+        navigate("/start")
+      }
+      catch (err) {
+        alert(err.response.data)
+      }
+    }
+    else {
+      try {
+        await axios.post('http://localhost:3001/userRegister', {
+          name: name,
+          password: password
+        })
+
+        const response = await axios.post('http://localhost:3001/userLogin', {
+          name: name,
+          password: password
+        })
+        alert("register success!")
+
+        setUserName(name)
+        localStorage.setItem("token", response.data.token)
+        navigate("/start")
+      }
+      catch (err) {
+        alert(err.response.data)
+      }
+    }
+  }
   return (
-    <div style={{
-      backgroundImage: `url(${backgroundImage})`,
-      backgroundPosition: 'center',
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat',
-      width: '100%',
-      height: '90vh'
-    }}>
-      <div className="row justify-content-center">
-        <h1 className="text-center my-3">Welcome to MSc in Partying</h1>
-        <div className="col-md-6">
-          <div className='text-center my-3'>
-            <input type="button" className="btn btn-primary rounded-pill" value={isLogin ? "Go Register" : "Go Login"} onClick={() => setIsLogin(!isLogin)} />
+    <div className="login">
+      <div className="content">
+        <div className="position-absolute text-center">
+          <h1>Welcome to MSc in Partying </h1>
+          <h2>
+            <div>Party like a pro: </div>
+            <div>
+              Groove and share memories with the ultimate platform for hosts and
+              guests!
+            </div>
+          </h2>
+          <div>
+            <button
+              type="button"
+              onClick={() => setStep("1")}
+              className={`top-btn btn-success ${step === "1" ? "active-button" : ""
+                }`}
+            >
+              Login
+            </button>
+            <button
+              type="button"
+              onClick={() => setStep("2")}
+              className={`top-btn btn-success ${step === "2" ? "active-button" : ""
+                }`}
+            >
+              Register
+            </button>
           </div>
-          {isLogin && <UserLogin setUserName={setUserName} />}
-          {!isLogin && <UserRegister setUserName={setUserName} />}
+          <form onSubmit={btn_submit}>
+            <div>
+              <input
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                type="text"
+                className="input"
+                placeholder='username'
+                required={true} />
+            </div>
+            <div className="text-danger">
+              {err ? "Oops! This name doesn’t exist!" : null}
+            </div>
+            <div>
+              <input
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                type="password"
+                className="input"
+                placeholder='password'
+                required={true} />
+            </div>
+            <div className="text-danger">
+              {passwordErr ? "Oops! This password doesn’t exist!" : null}
+            </div>
+            <div>
+              <button onClick={btn_submit} type="submit" className="btn btn-success button"            >
+                {step === "1" ? "Login" : "Register"}
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
