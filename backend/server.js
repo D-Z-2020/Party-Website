@@ -11,14 +11,9 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const socketIO = require('socket.io');
 const mongoose = require("mongoose")
-const User = require("./model/User")
-const Room = require("./model/Room")
-const jwt = require("jsonwebtoken")
-const bcryptjs = require("bcryptjs")
 const fs = require('fs');
 const userAuthenticate = require('./middleware/userAuthenticate')
 const upload = require('./config/diskConnection');
-const socketConfig = require('./config/socketConfig')
 const PORT = process.env.PORT || 3001;
 
 // connect to database
@@ -48,304 +43,32 @@ app.use('/userRegister', require('./routes/userRegister'))
 // Post request. user login endpoint
 app.use('/userLogin', require('./routes/userLogin'))
 
-// create or restore room for host
-app.get('/room', userAuthenticate, async (req, res) => {
-    const name = req.name
-    try {
-        // get a unique room code for other user to join the room
-        const code = await Room.generateUniqueCode();
+// Get request. create or restore room for host
+app.use('/room', userAuthenticate, require('./routes/room'))
 
-        // trying to create a new room for the host
-        // duplicate hostUser will throw a MongoServerError, catched in the catch block
-        const room = await Room.create({
-            hostUser: name,
-            code: code
-        })
+// Post request. handle when user change the content of the queue
+app.use('/updateQueue', userAuthenticate, require('./routes/updateQueue'))
 
-        const user = await User.findOne({
-            name: name,
-        })
-        user.roomId = room._id.toString()
-        user.save()
+// Post request. handle when user change the content of game links
+app.use('/updateLinks', userAuthenticate, require("./routes/updateLinks"))
 
-        res.status(201)
-        res.json(room)
-    } catch (err) {
-        // there already exist room with the given name as host, find 
-        // the room and let the host join to that room
-        const room = await Room.findOne({
-            hostUser: name,
-        })
-        res.status(200)
-        res.json(room)
-    }
-})
+// Post request. Handle a guest join a room through 4 digit room code
+app.use('/joinRoom', userAuthenticate, require('./routes/joinRoom'))
 
-// handle when user change the content of the queue
-app.post('/updateQueue', userAuthenticate, async (req, res) => {
-    try {
-        const room = await Room.findOne({
-            _id: req.body.roomId,
-        })
-        room.queue = req.body.updatedQueue
-        room.save()
-        res.sendStatus(200)
-    } catch (err) {
-        res.sendStatus(400)
-        console.log(err)
-    }
-})
+// Post request. handle when host change the room setting
+app.use("/changeSetting", userAuthenticate, require('./routes/changeSetting'))
 
-// handle when user change the content of game links
-app.post('/updateLinks', userAuthenticate, async (req, res) => {
-    try {
-        const room = await Room.findOne({
-            _id: req.body.roomId,
-        })
-        room.links = req.body.updatedLinks
-        room.save()
-        res.sendStatus(200)
-    } catch (err) {
-        res.sendStatus(400)
-        console.log(err)
-    }
-})
+// Get request. get information for the room where the user is currently in
+app.use("/getRoomInfo", userAuthenticate, require('./routes/getRoomInfo'))
 
-// handle a guest join a room through 4 digit room code
-app.post('/joinRoom', userAuthenticate, async (req, res) => {
-    const name = req.name
-    try {
-        const user = await User.findOne({
-            name: name,
-        })
+// Get request. get the user's current room code
+app.use("/userRoom", userAuthenticate, require('./routes/userRoom'))
 
-        const prevRoomId = user.roomId
-        const newRoomCode = req.body["code"]
+// Get request. host permanently delete their room
+app.use("/dismissRoom", userAuthenticate, require('./routes/dismissRoom'))
 
-        let prevRoom = await Room.findOne({
-            _id: prevRoomId,
-        })
-
-        let newRoom;
-        try {
-            newRoom = await Room.findOne({
-                code: newRoomCode,
-            })
-        }
-
-        catch (err) {
-            res.status(400)
-            res.send("room id invalid format")
-            return
-        }
-
-        if (!newRoom) {
-            res.status(400)
-            res.send("invalid room id")
-            return
-        } else {
-            const newRoomId = newRoom._id
-            // the user has previousely join some room
-            if (prevRoom) {
-                // the user is the host of prev room
-                if (prevRoom.hostUser === name) {
-                    // host join its prev room by id
-                    if (newRoom.hostUser === name) {
-                        res.sendStatus(200)
-                        return
-                    } else {
-                        // host join new room will dsimiss its original room, need to delet that room
-                        // here also need to delete NonHost user from original room
-                        await Room.findOneAndRemove({
-                            _id: prevRoomId,
-                        }).exec();
-                        user.roomId = newRoomId
-                        await user.save()
-
-                        const users = await User.find({})
-                        users.map(user => {
-                            if (user.roomId === prevRoomId) {
-                                user.roomId = null;
-                                user.save();
-                            }
-                        })
-
-                        res.status(202)
-                        res.json(newRoom)
-                        return
-                    }
-                }
-                else {
-                    user.roomId = newRoomId
-                    user.save()
-                    res.status(201)
-                    res.json(newRoom)
-                    return
-                }
-            } else {
-                user.roomId = newRoomId
-                user.save()
-                res.status(201)
-                res.json(newRoom)
-                return
-            }
-        }
-    } catch (err) {
-        console.log(err)
-        res.status(400).send("Invalid User")
-    }
-})
-
-// handle when host change the room setting
-app.post("/changeSetting", userAuthenticate, async (req, res) => {
-    try {
-        const roomId = req.body["roomId"]
-
-
-        const room = await Room.findOne({
-            _id: roomId,
-        })
-
-        room.partyName = req.body["partyName"]
-        room.location = req.body["location"]
-        room.date = req.body["date"]
-        room.save()
-        res.sendStatus(200)
-
-    } catch (err) {
-        console.log(err)
-        res.sendStatus(401)
-    }
-})
-
-// get information for the room where the user is currently in
-app.get("/getRoomInfo", userAuthenticate, async (req, res) => {
-    try {
-        const name = req.name
-        const user = await User.findOne({
-            name: name,
-        })
-
-        const roomId = user.roomId
-
-        const room = await Room.findOne({
-            _id: roomId,
-        })
-
-        res.status(200)
-        res.json(room)
-
-    } catch (err) {
-        console.log(err)
-        res.sendStatus(401)
-    }
-})
-
-// get the host's room code for other user to join
-app.get("/userRoom", userAuthenticate, async (req, res) => {
-    try {
-        const name = req.name
-
-        const user = await User.findOne({
-            name: name,
-        })
-
-        const room = await Room.findOne({
-            _id: user.roomId,
-        })
-
-
-        res.status(200)
-        if (room) {
-            res.json(room.code)
-        }
-        else {
-            res.json(null)
-        }
-
-    } catch (err) {
-        console.log(err)
-        res.sendStatus(401)
-    }
-})
-
-// host permanently delete their room
-app.get("/dismissRoom", userAuthenticate, async (req, res) => {
-    try {
-        const name = req.name
-
-        const roomToDismiss = await Room.findOne({
-            hostUser: name,
-        })
-
-        const roomId = roomToDismiss._id
-
-        const user = await User.findOne({
-            name: name,
-        })
-
-        if (!roomToDismiss) {
-            res.status(400)
-            res.send("you are not the host of any room")
-        }
-        else {
-            Room.findOneAndRemove({
-                hostUser: name,
-            }).exec();
-            user.roomId = null
-            user.save()
-
-            const users = await User.find({})
-            users.map(user => {
-                if (user.roomId === roomId.toString()) {
-                    user.roomId = null;
-                    user.save();
-                }
-            })
-
-            const dir = `./uploads/${roomId}`;
-
-            if (fs.existsSync(dir)) {
-                fs.rmSync(dir, { recursive: true });
-            }
-
-            res.sendStatus(200)
-            return
-        }
-    } catch (err) {
-        console.log(err)
-        res.sendStatus(401)
-    }
-})
-
-// guest leave the room
-app.get("/leaveRoom", userAuthenticate, async (req, res) => {
-    try {
-        const name = req.name
-
-        const hostRoom = await Room.findOne({
-            hostUser: name,
-        })
-
-        if (hostRoom) {
-            res.status(400)
-            res.send("You are the host of the room, you can only dismiss it, can't leave it")
-            return
-        }
-        else {
-            const user = await User.findOne({
-                name: name,
-            })
-            user.roomId = null
-            user.save()
-            res.sendStatus(200)
-            return
-        }
-    } catch (err) {
-        console.log(err)
-        res.sendStatus(401)
-    }
-})
+// Get request. Guest leave the room
+app.use("/leaveRoom", userAuthenticate, require('./routes/leaveRoom'))
 
 // user upload image to a room, saved in server side
 app.post('/upload/:roomID', upload.single('image'), (req, res) => {
@@ -363,7 +86,7 @@ app.get('/images/:roomID', (req, res) => {
 
     fs.readdir(dir, (err, files) => {
         if (err) {
-            return res.status(500).json({ message: 'Error reading directory' });
+            return res.status(500).send('Error reading directory');
         }
         res.status(200).json({ files: files.map(file => `/uploads/${roomID}/${file}`) });
     });
@@ -377,13 +100,13 @@ app.delete('/images/:roomId/:filename', async (req, res) => {
     try {
         if (fs.existsSync(dir)) {
             fs.unlinkSync(dir);
-            res.status(200).send({ message: 'deleted successfully' });
+            res.status(200).send('deleted successfully');
         } else {
-            res.status(404).send({ message: 'not found' });
+            res.status(404).send('not found');
         }
     } catch (error) {
         console.error(error);
-        res.status(500).send({ message: 'server error' });
+        res.status(500).send('server error');
     }
 });
 
@@ -397,4 +120,32 @@ const io = socketIO(server, {
     },
 });
 
-socketConfig(io)
+io.on("connection", (socket) => {
+    socket.on("join_room", (data) => {
+        socket.join(data);
+    });
+
+    socket.on("leave_room", (roomId) => {
+        socket.leave(roomId);
+    });
+
+    socket.on("add_track", (data) => {
+        socket.to(data.room).emit("receive_track", data);
+    });
+
+    socket.on("update_links", (data) => {
+        socket.to(data.room).emit("receive_links", data);
+    });
+
+    socket.on("host_room_dismissed", (data) => {
+        socket.to(data).emit("leave_host_room");
+    });
+
+    socket.on("settingChanges", (data) => {
+        socket.to(data).emit("updateSetting");
+    });
+
+    socket.on("image_upload", (data) => {
+        socket.to(data.room).emit("rerender_room_images");
+    });
+});
