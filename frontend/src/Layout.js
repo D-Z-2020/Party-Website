@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { Outlet } from 'react-router-dom';
-import logo from './assets/image/logo.png';
+import logo from "./assets/logo.png";
 
 export default function Layout({ userName, setUserName }) {
     const logout = () => {
@@ -14,21 +14,21 @@ export default function Layout({ userName, setUserName }) {
             <nav className="navbar bg-light" id="header">
                 <div className="container-fluid">
                     <div className="d-flex">
-                        <img src={logo} alt="Logo" width="100" height="40" />
+                        <img src={logo} alt="Logo" width="120" height="48" />
                     </div>
-                    <div className="d-flex">
+                    {/* <div className="d-flex">
                         {userName ? (
                             <p>Welcome, user {userName}</p>
                         ) : (
                             <p>You have not login!</p>
                         )}
-                    </div>
+                    </div> */}
                     <div className="d-flex" style={{minWidth:"100px"}}>
                         {userName ? (
                             <input
                                 type="button"
                                 className="btn btn-outline-secondary"
-                                value="logout"
+                                value="Logout"
                                 onClick={logout}
                             />
                         ) : (
