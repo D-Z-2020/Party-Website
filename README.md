@@ -15,7 +15,7 @@ Before you begin, ensure you have installed the latest version of Node.js, npm a
     ```bash
     git clone https://github.com/UOA-CS732-SE750-Students-2023/project-group-fluffy-fireflies
     ```
-2. Add a `.env ` file under `backend` folder with the following information:
+2. Add a `.env` file under `backend` folder with the following information:
     ```bash
     REDIRECT_URI = 'http://localhost:3000/start/'
     CLIENT_ID = '{yourSpotifyClientID}'
@@ -34,7 +34,7 @@ Before you begin, ensure you have installed the latest version of Node.js, npm a
     DATABASE_URI = mongodb://127.0.0.1/party
     PORT = 3001
     ```
-3. If you use your own Spotify Client ID in Step 2, please replace clientId: "5c9e849201d24dfb8f563a7a081e3be9" in `Dashboard.js` with your own client id.
+3. If you use your own Spotify Client ID in Step 2, please replace clientId: `5c9e849201d24dfb8f563a7a081e3be9` in `Dashboard.js` with your own client id.
 4. In the `backend ` folder, install dependencies:
     ``` 
     npm install
@@ -43,10 +43,8 @@ Before you begin, ensure you have installed the latest version of Node.js, npm a
     ```
     npm run devStart
     ```
-    You should see:
-    ```
-    Listening on port 3001
-    ```
+    You should see
+    `Listening on port 3001` in the terminal window.
 5. In the `frontend` folder, install dependencies:
     ```
     npm install
