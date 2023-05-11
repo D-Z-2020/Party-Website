@@ -30,7 +30,7 @@ const ImageUpload = ({ roomId, onImageUploaded }) => {
                 <div class="card-body">
                     <form onSubmit={onFileUpload}>
                         <input type="file" name="image" accept="image/*" onChange={onFileChange} />
-                        <button type="submit" class="btn btn-success">Upload</button>
+                        <button type="submit" class="btn btn-add">Upload</button>
                     </form>
                 </div>
             </div>
