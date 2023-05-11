@@ -27,9 +27,9 @@ export default function RoomInfo({ roomCode,partyName,setPartyName,location,setL
 			<div class="card">
 				<div class="card-body">
 					<p>Room Code: {roomCode}</p>
-					<p>party name: {partyName}</p>
-					<p>location: {location}</p>
-					<p>date: {date}</p>
+					<p>Party Name: {partyName}</p>
+					<p>Location: {location}</p>
+					<p>Time: {date}</p>
 				</div>
 			</div>
         </div>

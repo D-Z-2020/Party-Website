@@ -12,8 +12,8 @@ const roomSchema = new mongoose.Schema({
     hostUser: { type: String, required: true, unique: true },
     queue: { type: Array, default: [] },
     links: { type: Array, default: [] },
-    partyName: { type: String, default: "Party Space" },
-    location: { type: String, default: "not specified" },
+    partyName: { type: String, default: "My Party" },
+    location: { type: String, default: "Not specified" },
     date: { type: String, default: getCurrentDT },
     code: { type: String, unique: true, required: true }
 })
