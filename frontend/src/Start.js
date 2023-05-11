@@ -125,7 +125,7 @@ export default function Start({ setUserName }) {
 
     const code = new URLSearchParams(window.location.search).get('code')
     return (
-        <div className="container">
+        <div className="container dashboard-container">
             <div className="row">
                 {isNonHost ? <NonHostDashboard roomInfo={roomInfo} socket={socket} globalIsPremium={globalIsPremium} setIsNonHost={setIsNonHost} /> : (code ? <Dashboard code={code} socket={socket} /> : <div>
                     {showJoinRoomForm && <JoinRoomForm joinRoom={joinRoom} roomCodeToJoin={roomCodeToJoin} setRoomCodeToJoin={setRoomCodeToJoin} setShowJoinRoomForm={setShowJoinRoomForm} />}
