@@ -83,7 +83,8 @@ h3{
     height: 54px !important;
     border-radius: 50px !important;
     font-size: 21px !important;
-    margin: 0px !important;
+    margin-left: 3rem !important;
+    margin-right: 3rem !important;
 }
 
 .playback{
