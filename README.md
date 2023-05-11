@@ -35,7 +35,7 @@ Before you begin, ensure you have installed the latest version of Node.js, npm a
     PORT = 3001
     ```
 3. If you use your own Spotify Client ID in Step 2, please replace clientId: `5c9e849201d24dfb8f563a7a081e3be9` in `Dashboard.js` with your own client id.
-4. In the `backend ` folder, install dependencies:
+4. In the `backend` folder, install dependencies:
     ``` 
     npm install
     ```
