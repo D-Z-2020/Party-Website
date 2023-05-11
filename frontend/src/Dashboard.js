@@ -12,6 +12,7 @@ import ImageUpload from './ImageUpload'
 import RoomImages from './RoomImages'
 import RoomInfo from './RoomInfo'
 import Setting from './Setting'
+import './styles/Dashboard.css'
 
 const spotifyApi = new SpotifyWebApi({
     clientId: "5c9e849201d24dfb8f563a7a081e3be9",
@@ -128,9 +129,9 @@ export default function Dashboard({ code, socket }) {
             setGameLinks(req.data["links"])
             socket.emit("join_room", req.data["_id"]);
             console.log("join room", req.data["_id"])
-            if ((req.status) === 200) {
-                alert("restore room as host")
-            }
+            // if ((req.status) === 200) {
+            //     alert("restore room as host")
+            // }
         }
         catch (err) {
             localStorage.removeItem("token")
@@ -274,12 +275,12 @@ export default function Dashboard({ code, socket }) {
                                 </div>
                             </div>
 
-                            <div className="row mb-2">
-                                <div className="col-md-8 d-flex flex-column mx-auto">
-                                    <input className="btn btn-primary mt-3" type="button" value="Music" onClick={() => showComponent('Music')} />
-                                    <input className="btn btn-primary mt-3" type="button" value="Album" onClick={() => showComponent('Album')} />
-                                    <input className="btn btn-primary mt-3" type="button" value="Game" onClick={() => showComponent('Link')} />
-                                    <input className="btn btn-primary mt-3" type="button" value="Setting" onClick={() => showComponent('Setting')} />
+                            <div className="row p-2">
+                                <div className="col-md-12 d-flex flex-column mx-auto align-items-center">
+                                    <input className="btn btn-menu mt-3" type="button" value="Music" onClick={() => showComponent('Music')} />
+                                    <input className="btn btn-menu mt-3" type="button" value="Game" onClick={() => showComponent('Link')} />
+                                    <input className="btn btn-menu mt-3" type="button" value="Album" onClick={() => showComponent('Album')} />
+                                    <input className="btn-border mt-5" type="button" value="Party Settings" onClick={() => showComponent('Setting')} />
                                 </div>
                             </div>
                         </>}
@@ -303,7 +304,7 @@ export default function Dashboard({ code, socket }) {
                     </div>}
 
                 {activeComponent === 'Music' &&
-                    <div className="col-md-4 mb-2" style={{ height: "80vh", overflowY: "auto", border: '1px solid #eee' }}>
+                    <div className="col-md-4 mb-2 song-list" style={{ height: "80vh", overflowY: "auto", border: '0.5px solid #eee' }}>
                         <input type="text" className="form-control my-2" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
                         </input>
                         <br />
@@ -316,8 +317,8 @@ export default function Dashboard({ code, socket }) {
 
 
                 {activeComponent === 'Music' &&
-                    <div className="col-md-4" style={{ height: "80vh", overflowY: "auto", border: '1px solid #eee' }}>
-                        <h3>Music Queue</h3>
+                    <div className="col-md-4 song-list playback" style={{ height: "80vh", overflowY: "auto"}}>
+                        <h3>Playback Queue</h3>
                         <div style={{ overflowY: "auto" }} id="queue">
                             {customQueue.map(track =>
                                 (<TrackSearchResult track={track} key={track.uri} chooseTrack={playTrack} isQueue={true} isNonHost={false}/>))}
@@ -327,7 +328,7 @@ export default function Dashboard({ code, socket }) {
             </div>
 
             {activeComponent !== 'Setting' && <div className='row d-flex align-items-end' style={{ height: "13vh" }}>
-                <div className='col-md-12'>
+                <div className='col-md-12 player-style'>
                     <Player
                         key={playerKey}
                         accessToken={accessToken}
