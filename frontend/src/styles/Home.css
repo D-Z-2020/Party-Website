@@ -1,0 +1,199 @@
+.login .header {
+    padding: 10px 40px;
+}
+
+.login .header img {
+    width: 220px;
+}
+
+.login .content {
+    height: calc(100vh - 64px);
+    background: url(../assets/loginBg.png) no-repeat center center fixed;
+    background-size: cover;
+    position: relative;
+}
+
+.login .content .position-absolute {
+    position: absolute;
+    left: 50%;
+    top: 74px;
+    transform: translate(-50%, 0%);
+    width: 90%;
+}
+
+.login .content .position-absolute .top-btn {
+    width: 150px;
+    height: 54px;
+    background: #FFFFFF;
+    border: 1px solid #FFFFFF;
+    font-weight: 500;
+    font-size: 21px;
+    line-height: 22px;
+    color: #ADD2D2;
+    position: relative;
+    margin-bottom: 17px;
+}
+
+.login .content .position-absolute .top-btn:first-child {
+    left: 13px;
+    border-radius: 50px 0 0 50px;
+}
+
+.login .content .position-absolute .top-btn:last-child {
+    right: 13px;
+    border-radius: 0px 50px 50px 0px;
+}
+
+.login .content .position-absolute .top-btn:focus,
+.login .content .position-absolute .top-btn:hover {
+    border: inherit;
+    box-shadow: none;
+}
+
+.login .content .position-absolute .top-btn.active-button {
+    background: #0A7777;
+    border: 1px solid #0A7777;
+    color: #FFFFFF;
+    z-index: 99;
+    border-radius: 50px!important;
+}
+
+.login .content .position-absolute h1 {
+    font-weight: 700 ;
+    font-size: 72px;
+    line-height: 72px;
+    letter-spacing: 0.5px;
+    color: #fff;
+    margin-bottom: 54px;
+}
+
+.login .content .position-absolute h2 {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 45px;
+    text-align: center;
+    color: #ADD2D2;
+    margin-bottom: 54px;
+}
+
+.login .content .position-absolute .input {
+    width: 270px;
+    height: 54px;
+    background: rgba(229, 229, 229, 0.47);
+    border: 1px solid #0A7777;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 32px;
+    color: #ADD2D2;
+    text-align: center;
+}
+
+.login .content .position-absolute .input::placeholder {
+    text-align: center;
+    font-weight: 500;
+    font-size: 28px;
+    line-height: 32px;
+    color: #ADD2D2;
+}
+
+.login .content .position-absolute .input:focus {
+    border: 1px solid #0A7777;
+    outline: none;
+}
+
+.login .content .position-absolute .text-danger {
+    height: 17px;
+    line-height: 17px;
+    font-weight: 400;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    color: #B00020;
+}
+
+.login .content .position-absolute .button {
+    width: 170px !important;
+    height: 54px !important;
+    background: #0A7777;
+    border: 1px solid #0A7777;
+    border-radius: 50px;
+    font-weight: 500;
+    font-size: 21px;
+    color: #FFFFFF;
+}
+
+@media (max-width: 1080px) {
+    .login .header {
+        height: 60px;
+        padding: 10px 24px;
+    }
+
+    .login .header .img {
+        width: 107px;
+    }
+
+    .login .header .btn {
+        width: 68px !important;
+        height: 29px !important;
+    }
+
+    .login .content {
+        height: calc(100vh - 60px);
+    }
+
+    .login .content .position-absolute {
+        width: 90% !important;
+    }
+
+    .login .content .position-absolute h1 {
+        font-size: 50px;
+        line-height: 32px;
+        margin-bottom: 50px;
+    }
+
+    .login .content .position-absolute h2 {
+        font-size: 25px;
+        line-height: 32px;
+        margin-bottom: 50px;
+    }
+
+    @media (max-width: 768px) {
+        .login .header {
+            height: 60px;
+            padding: 10px 24px;
+        }
+    
+        .login .header .img {
+            width: 107px;
+        }
+    
+        .login .header .btn {
+            width: 68px !important;
+            height: 29px !important;
+        }
+    
+        .login .content {
+            height: calc(100vh - 60px);
+        }
+    
+        .login .content .position-absolute {
+            width: 90% !important;
+        }
+    
+        .login .content .position-absolute h1 {
+            font-size: 35px;
+            line-height: 32px;
+            margin-bottom: 50px;
+        }
+    
+        .login .content .position-absolute h2 {
+            font-size: 20px;
+            line-height: 25px;
+            margin-bottom: 50px;
+        }
+    }
+}
+
+
+
