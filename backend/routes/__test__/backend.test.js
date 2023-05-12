@@ -220,8 +220,8 @@ describe('GET /room', () => {
                 expect(res.body.queue).toEqual([]);
                 expect(res.body.links).toEqual([]);
                 expect(res.body.hostUser).toBe("3");
-                expect(res.body.partyName).toBe("Party Space");
-                expect(res.body.location).toBe("not specified");
+                expect(res.body.partyName).toBe("My Party");
+                expect(res.body.location).toBe("Not specified");
                 expect(res.body.code).toBe("1002");
                 return done();
             });

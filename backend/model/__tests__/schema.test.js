@@ -199,8 +199,8 @@ it('adds room success', async () => {
     const roomFromDatabase = await Room.findOne({ hostUser: '3' });
     expect(roomFromDatabase.queue).toEqual([]);
     expect(roomFromDatabase.links).toEqual([]);
-    expect(roomFromDatabase.partyName).toBe("Party Space");
-    expect(roomFromDatabase.location).toBe("not specified");
+    expect(roomFromDatabase.partyName).toBe("My Party");
+    expect(roomFromDatabase.location).toBe("Not specified");
     expect(roomFromDatabase.code).toBe("1002");
 });
 
