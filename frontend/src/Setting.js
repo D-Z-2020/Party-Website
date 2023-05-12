@@ -87,7 +87,7 @@ export default function Setting({ roomId, partyName, setPartyName, location, set
 
                 {!showConfirmationPage &&
                         <div className='row justify-content-center mt-5'>
-                            <button type="button" onClick={handleDismiss} className="btn btn-danger ml-5">Delete room</button>
+                            <button type="button" onClick={handleDismiss} className="btn btn-danger btn-danger-extend ml-5">Delete room</button>
                         </div>
                 }
             </div>

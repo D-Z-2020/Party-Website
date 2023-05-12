@@ -6,7 +6,7 @@ function ConfirmationPage({ handleConfirm, handleCancel }) {
             <h1>Are you sure?</h1>
             <h3>You will lose the access to the party space.</h3>
             <div className="row w-50 justify-content-around mt-3">
-                <button className="btn btn-danger col-4 my-3" onClick={handleConfirm}>Yes</button>
+                <button className="btn btn-danger btn-danger-extend col-4 my-3" onClick={handleConfirm}>Yes</button>
                 <button className="btn-border col-4 my-3" onClick={handleCancel}>No</button>
             </div>
         </div>
