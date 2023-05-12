@@ -53,7 +53,14 @@ Before you begin, ensure you have installed the latest version of Node.js, npm a
 
     3. `PORT` is the port number your backend app running on. It should not be the same as your frontend app port. You can set it to `3001`. If you do not set this variable, the port number will default to `3001`.
     
-3. Replace clientId: `5c9e849201d24dfb8f563a7a081e3be9` in `frontend/src/Dashboard.js` with your own client id.
+3. Add a `.env` file under `frontend` folder with the following variables:
+    ```bash
+    REACT_APP_BACKEND_PORT={YourBackendAppPort}
+    REACT_APP_FRONTEND_PORT={YourFrontendAppPort}
+    REACT_APP_CLIENT_ID = {SpotifyClientIDYouGetFromStep2}
+    PORT = {YourFrontendAppPort}
+    ```
+    You can simply setting `REACT_APP_BACKEND_PORT=3001` and `REACT_APP_FRONTEND_PORT` and `PORT` to 3000.
 4. If you want to try using our app as a party host, you must have a Spotify Premium account and allow that account to access your app in Spotify app user management.
 
 5. In the `backend` folder, install dependencies:
@@ -69,7 +76,7 @@ Before you begin, ensure you have installed the latest version of Node.js, npm a
 
     Running this command for backend testing:
     ``` 
-    npm test
+    npm run test
     ```
 6. In the `frontend` folder, install dependencies:
     ```
@@ -79,8 +86,12 @@ Before you begin, ensure you have installed the latest version of Node.js, npm a
     ```
     npm run start
     ```
-    You should see the application running under `localhost:{FrontendPortNumber}`.
-    By default, FrontendPortNumber is 3000.
+    You should see the application running under `localhost:{YourFrontendAppPort}`.
+    
+    Running this command for backend testing:
+    ``` 
+    npm run test
+    ```
 
 ## Usage
 - If you are a party host, you will:
