@@ -24,12 +24,12 @@ const ImageUpload = ({ roomId, onImageUploaded }) => {
 
 
     return (
-        <div>
+        <div class="p-2">
             <div class="card">
                 <div class="card-body">
-                    <form onSubmit={onFileUpload}>
-                        <input type="file" name="image" accept="image/*" onChange={onFileChange} />
-                        <button type="submit" class="btn btn-add">Upload</button>
+                    <form class="px-2" onSubmit={onFileUpload}>
+                        <input type="file" class="col-8" name="image" accept="image/*" onChange={onFileChange} />
+                        <button type="submit" class="btn btn-add m-2">Upload</button>
                     </form>
                 </div>
             </div>

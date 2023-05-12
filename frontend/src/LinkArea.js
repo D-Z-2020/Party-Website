@@ -7,12 +7,12 @@ export default function LinkArea({gameLink, setGameLink, gameLinks, setGameLinks
         <div class="col p-2">
 			<div class="card">
 				<div class="card-body">    
-					<form class="row g-2">		
-						<div class="col-9">
+					<form class="row align-items-center">		
+						<div class="col-8 m-2">
 							<input class="form-control" type="text" placeholder="Add a game link" value={gameLink} onChange={e => setGameLink(e.target.value)}></input>
 						</div>
-						<div class="col-3">
-							<input class="btn btn-add mb-3" type="button" value="Add" onClick={() => {addLink(gameLink)}} />
+						<div class="col-2 m-2">
+							<input class="btn btn-add" type="button" value="Add" onClick={() => {addLink(gameLink)}} />
 						</div>
 					</form>
 				<div style={{ overflowY: "auto"}}>
