@@ -65,32 +65,6 @@
     outline: none;
 }
 
-.btn-secondary{
-    width: 170px;
-    height: 54px;
-    background: rgba(229, 229, 229, 0);
-    border: 1px solid #0A7777;
-    border-radius: 50px;
-    font-weight: 500;
-    font-size: 21px;
-    line-height: 32px;
-    color: #ffffff;
-    text-align: center;
-}
-
-.btn-secondary:hover{
-    width: 170px;
-    height: 54px;
-    background: rgba(229, 229, 229, 0.2);
-    border: 1px solid #0A7777;
-    border-radius: 50px;
-    font-weight: 500;
-    font-size: 21px;
-    line-height: 32px;
-    color: #ADD2D2;
-    text-align: center;
-}
-
 .text-danger {
     height: 17px;
     line-height: 17px;

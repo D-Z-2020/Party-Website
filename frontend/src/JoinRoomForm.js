@@ -24,7 +24,7 @@ export default function JoinRoomForm({ joinRoom, roomIdToJoin, setRoomCodeToJoin
                             <input className='button btn btn-primary my-3' type="submit" value="Join" />
                         </div>
                         <div className="form-group">
-                            <input className="btn-secondary my-3" type="button" value="Back" onClick={() => setShowJoinRoomForm(false)} />
+                            <input className="btn-border my-3" type="button" value="Back" onClick={() => setShowJoinRoomForm(false)} />
                         </div>
                     </form>
                     
