@@ -253,16 +253,16 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
                     <ConfirmationPage handleConfirm={leaveRoom} handleCancel={() => showComponent('Music')} />}
                 <br />
 
-                {activeComponent === 'Album' && <div className="col-md-8">
+                {activeComponent === 'Album' && <div className="col-md-8 feature-height">
                     <ImageUpload roomId={roomId} onImageUploaded={handleImageUploaded} />
                     <RoomImages roomId={roomId} handleImageDeleted={handleImageDeleted} key={fetchImagesKey} isHost={false} /></div>}
 
-                {activeComponent === 'Link' && <div className="col-md-8">
+                {activeComponent === 'Link' && <div className="col-md-8 feature-height">
                     <LinkArea gameLink={gameLink} setGameLink={setGameLink} gameLinks={gameLinks} setGameLinks={setGameLinks} addLink={addLink} deleteLink={deleteLink} isHost={false} />
                 </div>
                 }
                 {activeComponent === 'Music' &&
-                    <div className="col-md-4 mb-2 song-list" style={{ height: "80vh", overflowY: "auto", border: '0.5px solid #eee' }}>
+                    <div className="col-md-4 my-2 song-list" style={{ overflowY: "auto"}}>
                         <input type="text" className="form-control my-2" placeholder="Search Songs/Artists" value={search} onChange={e => setSearch(e.target.value)}>
                         </input>
                         <br />
@@ -274,7 +274,7 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
                 }
 
                 {activeComponent === 'Music' &&
-                    <div className="col-md-4 song-list playback" style={{ height: "80vh", overflowY: "auto" }}>
+                    <div className="col-md-4 my-2 song-list playback" style={{ overflowY: "auto" }}>
                         <h3>Playback Queue</h3>
                         <div style={{ overflowY: "auto" }} id="queue">
                             {customQueue.map(track =>
