@@ -1,7 +1,7 @@
 import React from 'react'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-export default function RoomInfo({ roomCode,partyName,setPartyName,location,setLocation,date,setDate}) {
+export default function RoomInfo({ roomCode, partyName, setPartyName, location, setLocation, date, setDate }) {
     useEffect(() => {
         const fetchInfo = async () => {
             try {
@@ -23,15 +23,14 @@ export default function RoomInfo({ roomCode,partyName,setPartyName,location,setL
     }, [roomCode]);
 
     return (
-        <div class="col p-2">
-			<div class="card">
-				<div class="card-body">
-					<p>Room Code: {roomCode}</p>
-					<p>Party Name: {partyName}</p>
-					<p>Location: {location}</p>
-					<p>Time: {date}</p>
-				</div>
-			</div>
+        <div class="m-3">
+            <div class="room-info">
+                <h2>Party Space</h2>
+                <h1>{partyName}</h1>
+                <p>Room Code: {roomCode}</p>
+                <p>Location: {location}</p>
+                <p>Time: {date}</p>
+            </div>
         </div>
     )
 }
