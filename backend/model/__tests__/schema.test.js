@@ -1,13 +1,17 @@
-import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
-import Room from '../Room';
-import User from '../User';
+const mongoose = require('mongoose')
+const { MongoMemoryServer } = require('mongodb-memory-server')
+const Room = require('../Room')
+const User = require('../User')
 const bcryptjs = require("bcryptjs")
 
 // initialize variables
 let user1;
 let user2;
 let user3;
+let mongodb;
+let hashedPassword1;
+let hashedPassword2;
+let hashedPassword3;
 
 const room1 = {
     _id: new mongoose.Types.ObjectId('000000000000000000000010'),
@@ -33,15 +37,11 @@ const room2 = {
     __v: 0
 }
 
-let mongodb;
-let hashedPassword1;
-let hashedPassword2;
-let hashedPassword3;
-
 // Setup and teardown
 beforeAll(async () => {
     mongodb = await MongoMemoryServer.create();
     await mongoose.connect(mongodb.getUri(), { useNewUrlParser: true });
+
 
     hashedPassword1 = await bcryptjs.hash("1", 10)
     hashedPassword2 = await bcryptjs.hash("2", 10)
@@ -77,6 +77,10 @@ beforeEach(async () => {
 
     await User.insertMany([user1, user2, user3]);
     await Room.insertMany([room1, room2]);
+
+    // ensure indexes to enforce uniqueness
+    await Room.ensureIndexes();
+    await User.ensureIndexes();
 });
 
 afterAll(async () => {
@@ -93,7 +97,7 @@ it('get users', async () => {
 
 it('get user', async () => {
     const aUser = await User.findOne({ _id: new mongoose.Types.ObjectId('000000000000000000000001') });
-    expect(aUser._id).toStrictEqual(new mongoose.Types.ObjectId('000000000000000000000001'))
+    expect(aUser._id).toEqual(new mongoose.Types.ObjectId('000000000000000000000001'))
 })
 
 it('user info', async () => {
@@ -110,9 +114,9 @@ it('user info', async () => {
     expect(allUsers[1].roomId).toBe('000000000000000000000011');
     expect(allUsers[2].roomId).toBe(null);
 
-    expect(allUsers[0]._id).toStrictEqual(new mongoose.Types.ObjectId('000000000000000000000001'));
-    expect(allUsers[1]._id).toStrictEqual(new mongoose.Types.ObjectId('000000000000000000000002'));
-    expect(allUsers[2]._id).toStrictEqual(new mongoose.Types.ObjectId('000000000000000000000003'));
+    expect(allUsers[0]._id).toEqual(new mongoose.Types.ObjectId('000000000000000000000001'));
+    expect(allUsers[1]._id).toEqual(new mongoose.Types.ObjectId('000000000000000000000002'));
+    expect(allUsers[2]._id).toEqual(new mongoose.Types.ObjectId('000000000000000000000003'));
 })
 
 it('adds user success', async () => {
@@ -137,6 +141,14 @@ it('add user with no name fail', async () => {
     return expect(user.save()).rejects.toThrow(mongoose.Error.ValidationError);
 });
 
+it('add room with duplicate name fail', async () => {
+    const user = new User({
+        name: "1",
+        password: '$2a$10$hUUmRQS9nSD8ENQsqp2Iz.a2Kj7wTmERjMNyTq8T0lVvM6a4wZgoi',
+    });
+    return expect(user.save()).rejects.toThrow(mongoose.Error.MongoServerError);
+});
+
 
 // testing for Room schema
 it('get rooms', async () => {
@@ -146,7 +158,7 @@ it('get rooms', async () => {
 
 it('get room', async () => {
     const aRoom = await Room.findOne({ _id: new mongoose.Types.ObjectId('000000000000000000000010') });
-    expect(aRoom._id).toStrictEqual(new mongoose.Types.ObjectId('000000000000000000000010'))
+    expect(aRoom._id).toEqual(new mongoose.Types.ObjectId('000000000000000000000010'))
 })
 
 it('room info', async () => {
@@ -172,8 +184,8 @@ it('room info', async () => {
     expect(allRooms[0].date).toBe("2023-05-11 08:56");
     expect(allRooms[1].date).toBe("2023-05-10 02:56");
 
-    expect(allRooms[0]._id).toStrictEqual(new mongoose.Types.ObjectId('000000000000000000000010'));
-    expect(allRooms[1]._id).toStrictEqual(new mongoose.Types.ObjectId('000000000000000000000011'));
+    expect(allRooms[0]._id).toEqual(new mongoose.Types.ObjectId('000000000000000000000010'));
+    expect(allRooms[1]._id).toEqual(new mongoose.Types.ObjectId('000000000000000000000011'));
 })
 
 it('adds room success', async () => {
@@ -185,8 +197,8 @@ it('adds room success', async () => {
     await room.save();
 
     const roomFromDatabase = await Room.findOne({ hostUser: '3' });
-    expect(roomFromDatabase.queue).toStrictEqual([]);
-    expect(roomFromDatabase.links).toStrictEqual([]);
+    expect(roomFromDatabase.queue).toEqual([]);
+    expect(roomFromDatabase.links).toEqual([]);
     expect(roomFromDatabase.partyName).toBe("Party Space");
     expect(roomFromDatabase.location).toBe("not specified");
     expect(roomFromDatabase.code).toBe("1002");
@@ -204,4 +216,20 @@ it('add room with no code fail', async () => {
         hostUser: '3'
     });
     return expect(room.save()).rejects.toThrow(mongoose.Error.ValidationError);
+});
+
+it('add room with duplicate host fail', async () => {
+    const room = new Room({
+        hostUser: '1',
+        code: "1002"
+    });
+    return expect(room.save()).rejects.toThrow(mongoose.Error.MongoServerError);
+});
+
+it('add room with duplicate code fail', async () => {
+    const room = new Room({
+        hostUser: '3',
+        code: "1001"
+    });
+    return expect(room.save()).rejects.toThrow(mongoose.Error.MongoServerError);
 });
