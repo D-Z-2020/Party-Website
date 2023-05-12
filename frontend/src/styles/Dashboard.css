@@ -74,11 +74,16 @@ h3{
 }
 
 .btn-add{
+    background: #0A7777 !important;
+    color: #FFFFFF !important;
+}
+
+.btn-add:hover{
     background: #0a6e6e !important;
     color: #FFFFFF !important;
 }
 
-.btn-danger{
+.btn-danger-extend{
     width: 170px !important;
     height: 54px !important;
     border-radius: 50px !important;
