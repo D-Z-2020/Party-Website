@@ -102,13 +102,11 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
 
         const onLeaveHostRoom = () => {
             window.location = "/start";
-            console.log("leave");
-            alert("host dismiss the room");
+            alert("The host has deleted the party space");
         };
 
         const onRerenderRoomImages = () => {
             setFetchImagesKey((prevFetchImagesKey) => prevFetchImagesKey + 1);
-            console.log("guest rerender");
         };
 
         const onUpdateSetting = () => {

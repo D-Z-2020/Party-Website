@@ -12,7 +12,6 @@ function RoleSelection({ globalIsPremium, restorePrevRoom, AUTH_URL, AUTH_URL_SH
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log(selectedOption);
         if (selectedOption === "Host") {
             const anchor = document.createElement('a');
             anchor.href = globalIsPremium ? AUTH_URL : AUTH_URL_SHOW_DIALOG;

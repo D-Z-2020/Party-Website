@@ -12,7 +12,7 @@ export default function useAuth(code) {
     useEffect(() => {
         axios.post('http://localhost:3001/login', { code })
             .then(res => {
-                console.log(res)
+                // console.log(res)
                 setAccessToken(res.data.accessToken)
                 setRefreshToken(res.data.refreshToken)
                 setExpiresIn(res.data.expiresIn)

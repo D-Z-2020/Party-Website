@@ -21,8 +21,6 @@ const spotifyApi = new SpotifyWebApi({
 export default function Dashboard({ code, socket }) {
     const navigate = useNavigate();
     const [isPremium, accessToken] = useAuth(code)
-    // console.log(isPremium)
-    // console.log(accessToken)
     const [search, setSearch] = useState("")
     const [searchResults, setSearchResults] = useState([])
     const [playingTrack, setPlayingTrack] = useState()
@@ -111,7 +109,6 @@ export default function Dashboard({ code, socket }) {
 
         socket.on("rerender_room_images", () => {
             setFetchImagesKey(prevFetchImagesKey => prevFetchImagesKey + 1);
-            console.log("host rerender")
         });
     }, [])
 
@@ -128,10 +125,7 @@ export default function Dashboard({ code, socket }) {
             setCustomQueue(req.data["queue"])
             setGameLinks(req.data["links"])
             socket.emit("join_room", req.data["_id"]);
-            console.log("join room", req.data["_id"])
-            // if ((req.status) === 200) {
-            //     alert("restore room as host")
-            // }
+
         }
         catch (err) {
             localStorage.removeItem("token")
@@ -143,7 +137,6 @@ export default function Dashboard({ code, socket }) {
 
     useEffect(() => {
         const token = localStorage.getItem("token")
-        //console.log(token)
         if (token) {
             const user = decodeToken(token)
             if (!user) {
@@ -162,7 +155,6 @@ export default function Dashboard({ code, socket }) {
     }, [])
 
     useEffect(() => {
-        console.log(isPremium)
         if (!isPremium) {
             dismissRoom(isPremium);
             alert("you need premium account to be a host!");

@@ -15,7 +15,6 @@ export default function Player({ accessToken, trackUri, playingTrack, setPlaying
                 // if (!state.isPlaying) setPlay(false)
                 // end at the last song in queue
                 if (state.isPlaying === false && state.progressMs == 0 && state.status === "READY" && state.isActive === true && state.nextTracks.length === 0 && state.type === "player_update") {
-                    console.log("end", state)
 
                     if (customQueue.length >= 2) {
                         setPlayingTrack(customQueue[1])

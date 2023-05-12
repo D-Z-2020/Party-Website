@@ -33,7 +33,6 @@ export default function Start({ setUserName }) {
 
     useEffect(() => {
         const token = localStorage.getItem("token")
-        //console.log(token)
         if (token) {
             const user = decodeToken(token)
             if (!user) {
@@ -60,7 +59,6 @@ export default function Start({ setUserName }) {
             })
 
             const prevRoomId = req1.data
-            console.log("prevRoomId", prevRoomId)
             const req = await axios.post("http://localhost:3001/joinRoom", {
                 headers: {
                     'x-access-token': localStorage.getItem("token")
@@ -68,7 +66,6 @@ export default function Start({ setUserName }) {
                 code: optionalRoomCode ? optionalRoomCode : roomCodeToJoin
             })
 
-            console.log("join_room", req.data["_id"])
             socket.emit("join_room", req.data["_id"]);
             if ((req.status) === 200) {
                 // restore room
@@ -117,7 +114,6 @@ export default function Start({ setUserName }) {
     }
 
     useEffect(() => {
-        console.log(!isNonHost)
         if (localStorage.getItem("token") && !isNonHost && !code) {
             restorePrevRoom();
         }

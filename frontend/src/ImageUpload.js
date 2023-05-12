@@ -16,7 +16,6 @@ const ImageUpload = ({ roomId, onImageUploaded }) => {
 
         try {
             const res = await axios.post(`http://localhost:3001/upload/roomID=${roomId}`, formData);
-            console.log(res.data);
             onImageUploaded();
         } catch (error) {
             console.error(error);
