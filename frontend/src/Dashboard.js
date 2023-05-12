@@ -15,7 +15,7 @@ import Setting from './Setting'
 import './styles/Dashboard.css'
 
 const spotifyApi = new SpotifyWebApi({
-    clientId: "5c9e849201d24dfb8f563a7a081e3be9",
+    clientId: process.env.REACT_APP_CLIENT_ID,
 
 })
 export default function Dashboard({ code, socket }) {
@@ -71,7 +71,7 @@ export default function Dashboard({ code, socket }) {
     }
 
     async function updateLink(updatedLinks) {
-        await axios.post("http://localhost:3001/updateLinks", {
+        await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/updateLinks`, {
             headers: {
                 'x-access-token': localStorage.getItem("token")
             },
@@ -83,7 +83,7 @@ export default function Dashboard({ code, socket }) {
     }
 
     async function updateQueue(updatedQueue) {
-        await axios.post("http://localhost:3001/updateQueue", {
+        await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/updateQueue`, {
             headers: {
                 'x-access-token': localStorage.getItem("token")
             },
@@ -114,7 +114,7 @@ export default function Dashboard({ code, socket }) {
 
     async function getRoomInfo() {
         try {
-            const req = await axios.get("http://localhost:3001/room", {
+            const req = await axios.get(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/room`, {
                 headers: {
                     'x-access-token': localStorage.getItem("token")
                 }
@@ -222,7 +222,7 @@ export default function Dashboard({ code, socket }) {
 
     const dismissRoom = async (isPremium = true) => {
         try {
-            const req = await axios.get("http://localhost:3001/dismissRoom", {
+            const req = await axios.get(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/dismissRoom`, {
                 headers: {
                     'x-access-token': localStorage.getItem("token")
                 }

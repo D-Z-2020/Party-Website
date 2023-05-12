@@ -6,7 +6,7 @@ export default function RoomInfo({ roomCode, partyName, setPartyName, location, 
         const fetchInfo = async () => {
             try {
                 if (!roomCode) return
-                const res = await axios.get("http://localhost:3001/getRoomInfo", {
+                const res = await axios.get(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/getRoomInfo`, {
                     headers: {
                         'x-access-token': localStorage.getItem("token")
                     }

@@ -15,7 +15,7 @@ const ImageUpload = ({ roomId, onImageUploaded }) => {
         formData.append('image', selectedFile);
 
         try {
-            const res = await axios.post(`http://localhost:3001/upload/roomID=${roomId}`, formData);
+            const res = await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/upload/roomID=${roomId}`, formData);
             onImageUploaded();
         } catch (error) {
             console.error(error);
