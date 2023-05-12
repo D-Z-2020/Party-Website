@@ -11,7 +11,7 @@ export default function UserLogin({ setUserName }) {
     const login = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:3001/userLogin', {
+            const response = await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/userLogin`, {
                 name: name,
                 password: password
             })

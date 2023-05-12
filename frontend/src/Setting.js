@@ -10,7 +10,7 @@ export default function Setting({ roomId, partyName, setPartyName, location, set
     const handleSubmit = async (event) => {
         event.preventDefault();
         try {
-            const req = await axios.post("http://localhost:3001/changeSetting", {
+            const req = await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/changeSetting`, {
                 headers: {
                     'x-access-token': localStorage.getItem("token")
                 },

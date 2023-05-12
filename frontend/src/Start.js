@@ -10,10 +10,10 @@ import RoleSelection from './RoleSelection';
 import JoinRoomForm from './JoinRoomForm';
 import background from './assets/image/pexels-photo-164853.webp'
 
-const AUTH_URL = "https://accounts.spotify.com/authorize?client_id=5c9e849201d24dfb8f563a7a081e3be9&response_type=code&redirect_uri=http://localhost:3000/start/&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state"
+const AUTH_URL = `https://accounts.spotify.com/authorize?client_id=${process.env.REACT_APP_CLIENT_ID}&response_type=code&redirect_uri=http://localhost:${process.env.REACT_APP_FRONTEND_PORT}/start/&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state`
 const AUTH_URL_SHOW_DIALOG = AUTH_URL + "&show_dialog=true"
 
-const socket = io('http://localhost:3001');
+const socket = io(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}`);
 export default function Start({ setUserName }) {
     const navigate = useNavigate();
     const location = useLocation();
@@ -52,14 +52,14 @@ export default function Start({ setUserName }) {
     const joinRoom = async (e, optionalRoomCode = null) => {
         e.preventDefault();
         try {
-            const req1 = await axios.get("http://localhost:3001/userRoom", {
+            const req1 = await axios.get(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/userRoom`, {
                 headers: {
                     'x-access-token': localStorage.getItem("token")
                 }
             })
 
             const prevRoomId = req1.data
-            const req = await axios.post("http://localhost:3001/joinRoom", {
+            const req = await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/joinRoom`, {
                 headers: {
                     'x-access-token': localStorage.getItem("token")
                 },
@@ -94,7 +94,7 @@ export default function Start({ setUserName }) {
 
     const restorePrevRoom = async () => {
         try {
-            const req = await axios.get("http://localhost:3001/userRoom", {
+            const req = await axios.get(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/userRoom`, {
                 headers: {
                     'x-access-token': localStorage.getItem("token")
                 },

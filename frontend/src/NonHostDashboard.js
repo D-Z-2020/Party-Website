@@ -13,7 +13,7 @@ import ConfirmationPage from './ConfirmationPage';
 import './styles/Dashboard.css'
 
 const spotifyApi = new SpotifyWebApi({
-    clientId: "5c9e849201d24dfb8f563a7a081e3be9",
+    clientId: process.env.REACT_APP_CLIENT_ID,
 
 })
 
@@ -69,7 +69,7 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
     }
 
     async function updateLink(updatedLinks) {
-        await axios.post("http://localhost:3001/updateLinks", {
+        await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/updateLinks`, {
             headers: {
                 'x-access-token': localStorage.getItem("token")
             },
@@ -81,7 +81,7 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
     }
 
     async function updateQueue(updatedQueue) {
-        await axios.post("http://localhost:3001/updateQueue", {
+        await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/updateQueue`, {
             headers: {
                 'x-access-token': localStorage.getItem("token")
             },
@@ -191,7 +191,7 @@ export default function NonHostDashboard({ roomInfo, socket, globalIsPremium, se
 
     const leaveRoom = async () => {
         try {
-            const req = await axios.get("http://localhost:3001/leaveRoom", {
+            const req = await axios.get(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/leaveRoom`, {
                 headers: {
                     'x-access-token': localStorage.getItem("token")
                 }

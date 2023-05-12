@@ -7,7 +7,7 @@ const RoomImages = ({ roomId, handleImageDeleted, isHost }) => {
     useEffect(() => {
         const fetchImages = async () => {
             try {
-                const res = await axios.get(`http://localhost:3001/images/roomID=${roomId}`);
+                const res = await axios.get(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/images/roomID=${roomId}`);
                 setImages(res.data.files);
             } catch (error) {
                 console.error(error);
@@ -35,7 +35,7 @@ const RoomImages = ({ roomId, handleImageDeleted, isHost }) => {
     const deleteImage = async (url, index) => {
         try {
             const filename = url.split('/').pop();
-            await axios.delete(`http://localhost:3001/images/roomID=${roomId}/filename=${filename}`);
+            await axios.delete(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/images/roomID=${roomId}/filename=${filename}`);
             setImages(prevImages => prevImages.filter((img, i) => i !== index));
             handleImageDeleted();
         } catch (error) {
@@ -48,13 +48,13 @@ const RoomImages = ({ roomId, handleImageDeleted, isHost }) => {
             {images.map((image, index) => (
                 <div key={index} style={{ display: 'inline-block', margin: '10px' }}>
                     <img
-                        src={`http://localhost:3001${image}`}
+                        src={`http://localhost:${process.env.REACT_APP_BACKEND_PORT}${image}`}
                         alt={`Room-${roomId}-Image${index + 1}`}
                         style={{ width: '250px' }}
                     />
                     <br />
                     <div className='text-center'>
-                        <a href={`http://localhost:3001${image}`} download={`Room-${roomId}-Image-${index + 1}`} target="_blank" rel="noopener noreferrer">
+                        <a href={`http://localhost:${process.env.REACT_APP_BACKEND_PORT}${image}`} download={`Room-${roomId}-Image-${index + 1}`} target="_blank" rel="noopener noreferrer">
                             <button className='btn btn-secondary ml-5' style={{ display: 'inline', border: 'none', cursor: 'pointer' }} >
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-up-right" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z" />
@@ -62,7 +62,7 @@ const RoomImages = ({ roomId, handleImageDeleted, isHost }) => {
                                 </svg>
                             </button>
                         </a>
-                        <button className='btn btn-add ml-5' style={{ display: 'inline', border: 'none', cursor: 'pointer', marginLeft: '0.4rem' }} onClick={() => downloadImage(`http://localhost:3001` + image, `Room-${roomId}-Image-${index + 1}`)}>
+                        <button className='btn btn-add ml-5' style={{ display: 'inline', border: 'none', cursor: 'pointer', marginLeft: '0.4rem' }} onClick={() => downloadImage(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}` + image, `Room-${roomId}-Image-${index + 1}`)}>
 
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-download" viewBox="0 0 16 16">
                                 <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z" />

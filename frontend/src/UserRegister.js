@@ -11,12 +11,12 @@ export default function UserRegister({ setUserName }) {
     const register = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:3001/userRegister', {
+            await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/userRegister`, {
                 name: name,
                 password: password
             })
 
-            const response = await axios.post('http://localhost:3001/userLogin', {
+            const response = await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/userLogin`, {
                 name: name,
                 password: password
             })

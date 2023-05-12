@@ -25,7 +25,7 @@ export default function Home({ setUserName }) {
     e.preventDefault();
     if (step === "1") {
       try {
-        const response = await axios.post('http://localhost:3001/userLogin', {
+        const response = await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/userLogin`, {
           name: name,
           password: password
         })
@@ -40,12 +40,12 @@ export default function Home({ setUserName }) {
     }
     else {
       try {
-        await axios.post('http://localhost:3001/userRegister', {
+        await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/userRegister`, {
           name: name,
           password: password
         })
 
-        const response = await axios.post('http://localhost:3001/userLogin', {
+        const response = await axios.post(`http://localhost:${process.env.REACT_APP_BACKEND_PORT}/userLogin`, {
           name: name,
           password: password
         })
