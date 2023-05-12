@@ -77,8 +77,8 @@ export default function Setting({ roomId, partyName, setPartyName, location, set
                             </div>
                         </div>
                         <div className='row justify-content-center mt-3'>
-                        <button type="button" onClick={() => { setActiveComponent("Music") }} className="btn-border">Back</button>
-                        <button type="submit" className="btn btn-primary" style={{ width: "50%" }}>Save</button>
+                        <button type="button" onClick={() => { setActiveComponent("Music") }} className="btn-border my-2">Back</button>
+                        <button type="submit" className="btn btn-primary my-2" style={{ width: "50%" }}>Save</button>
                         </div>
                     </form>
                 }
