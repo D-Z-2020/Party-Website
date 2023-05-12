@@ -9,34 +9,53 @@ Groove and share memories with the ultimate platform for hosts and guests!**
 - __Party Space__: Create your personalized party space that combines music sharing, games playing, and photos sharing features all in one place. Customize your party space with a name, set the time, and even denote a virtual or real-world location.
 
 ## Installation
-Before you begin, ensure you have installed the latest version of Node.js, npm and MongoDB server on your local development environment. Follow the instruction beblow to run the app:
+
+Before you begin, ensure you have installed the latest version of Node.js, npm and local MongoDB server on your local development environment. Follow the instruction below to run the app:
 
 1. Clone the project repository from GitHub:
     ```bash
     git clone https://github.com/UOA-CS732-SE750-Students-2023/project-group-fluffy-fireflies
     ```
-2. Add a `.env` file under `backend` folder with the following information:
+
+2. Add a `.env` file under `backend` folder with the following variables:
     ```bash
-    REDIRECT_URI = 'http://localhost:3000/start/'
-    CLIENT_ID = '{yourSpotifyClientID}'
-    CLIENT_SECRET = '{yourSpotifyClientSecret}'
-    TOKEN_SECRET = {yourSerectToken}
-    DATABASE_URI = mongodb://127.0.0.1/party
-    PORT = 3001
+    REDIRECT_URI = {YourRedirectURI}
+    CLIENT_ID = {YourSpotifyClientID}
+    CLIENT_SECRET = {YourClientSecret}
+    TOKEN_SECRET = {YourTokenSecret}
+    DATABASE_URI = {MongoDBConnectionURI}
+    PORT = {BackendPortNumber}
     ```
-    In order to get the `CLIENT_ID` and `CLIENT_SECRET`, you can register a Spotify Developer account, create an app and find the credentials under app settings.
+
+    You need to setup your Spotify app, get `CLIENT_ID`, `CLIENT_SECRET` and `REDIRECT_URI`, and give access to your account by following these steps:
+    1. Go to [Spotify developer website](https://developer.spotify.com/dashboard), register or  login with your Spotify account.
+
+    2. Click 'Create App'
+    ![Spotify_app-1](doc_images/Spotify_app-1.JPG)
+
+    3. Enter the information you want your app to have. One important field is the Redirect URI field(should then set the `REDIRECT_URI` in .env to this). This field specify the URI to redirect users after Spotify authentication. You should set it like this: `http://localhost:{frontend port number}/start/`. If the frontend running on port 3000, then you should set it as `http://localhost:3000/start/`.
+    ![Spotify_app-2](doc_images/Spotify_app-2.JPG)
+
+    4. In your app home, go to setting, you will be able to find `CLIENT_ID` and `CLIENT_SECRET`.
+    ![Spotify_app-3](doc_images/Spotify_app-3.JPG)
+    ![Spotify_app-4](doc_images/Spotify_app-4.JPG)
+
+    5. Go to `User Management`, add the email of Spotify account you want to access your Spotify App under development mode. A maximum of 25 is applied under development mode, you can submit a quote extension request to increase this number.
+    ![Spotify_app-5](doc_images/Spotify_app-5.JPG)
+
+    Guidance to get other backend enviroment variables
+    1. `TOKEN_SECRET` is a random string to encode user password. You want to ensure they are long enough so your user information will not be easily hacked. One way to create it is to user the following statement in node.js.
+    ```bash
+    require('crypto').randomBytes(64).toString('hex')
+    ```
+
+    2. `DATABASE_URI` is a string to connect to your local MongoDB database. If you do not change any database setting after you download, by default it is `mongodb://127.0.0.1`(for latest node version) or `mongodb://localhost:27017`(for some older node version). You should also specify the database name after the url like this `mongodb://127.0.0.1/party`
+
+    3. `PORT` is the port number your backend app running on. It should not be the same as your frontend app port. You can set it to `3001`. If you do not set this variable, the port number will default to `3001`.
     
-    For testing purpose, you can use this in your `.env` file:
-    ```
-    REDIRECT_URI = 'http://localhost:3000/start/'
-    CLIENT_ID = '5c9e849201d24dfb8f563a7a081e3be9'
-    CLIENT_SECRET = 'b89442d691704f9daddf68ed70f3c9f0'
-    TOKEN_SECRET = 0499f5b7ae0e13f94d3866c21b028ecfbd0ca7d724fd6ed942c5c2a492ffb023017b1782e6f461a17aece6cf6254cb4588812dc04caeb9a9a73eb9cdecd7fda9
-    DATABASE_URI = mongodb://127.0.0.1/party
-    PORT = 3001
-    ```
-3. If you use your own Spotify Client ID in Step 2, please replace clientId: `5c9e849201d24dfb8f563a7a081e3be9` in `frontend/src/Dashboard.js` with your own client id.
-4. If you want to try using our app as a party host, you must have a Spotify Premium account. To access a Spotify app in development mode, you need to add the email associated with your Spotify Premium account to user management under Spotify app settings.
+3. Replace clientId: `5c9e849201d24dfb8f563a7a081e3be9` in `frontend/src/Dashboard.js` with your own client id.
+4. If you want to try using our app as a party host, you must have a Spotify Premium account and allow that account to access your app in Spotify app user management.
+
 5. In the `backend` folder, install dependencies:
     ``` 
     npm install
@@ -46,7 +65,12 @@ Before you begin, ensure you have installed the latest version of Node.js, npm a
     npm run devStart
     ```
     You should see
-    `Listening on port 3001` in the terminal window.
+    `Listening on port {BackendPortNumber}` in the terminal window.
+
+    Running this command for backend testing:
+    ``` 
+    npm test
+    ```
 6. In the `frontend` folder, install dependencies:
     ```
     npm install
@@ -55,7 +79,9 @@ Before you begin, ensure you have installed the latest version of Node.js, npm a
     ```
     npm run start
     ```
-    You should see the application running under `localhost:3000`.
+    You should see the application running under `localhost:{FrontendPortNumber}`.
+    By default, FrontendPortNumber is 3000.
+
 ## Usage
 - If you are a party host, you will:
     - Register on the website
