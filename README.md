@@ -51,7 +51,7 @@ Before you begin, ensure you have installed the latest version of Node.js, npm a
     ![Spotify_app-5](doc_images/Spotify_app-5.JPG)
 
     Guidance to get other backend enviroment variables
-    1. `TOKEN_SECRET` is a random string to encode user password. You want to ensure they are long enough so your user information will not be easily hacked. One way to create it is to user the following statement in node.js.
+    1. `TOKEN_SECRET` is a random string to encode user password. You want to ensure they are long enough so your user information will not be easily hacked. One way to create it is to use the following statement in node.js.
     ```bash
     require('crypto').randomBytes(64).toString('hex')
     ```
