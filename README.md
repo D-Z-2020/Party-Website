@@ -1,3 +1,10 @@
+**Note: This is a copy of the original project (which is private). If you want a quick overview of how the application works, you can watch this demo video presented by one of our teammates, Hao Zhong:** [Demo Video](https://drive.google.com/file/d/1N1QCjAxTN-ikzb-lnU9ia8AVdsHmTtxh/view?usp=drive_link)
+
+<br />
+<br />
+<br />
+<br />
+
 # COMPSCI 732 Project - MSc in Partying
 **Party like a pro: 
 Groove and share memories with the ultimate platform for hosts and guests!**
